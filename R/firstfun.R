@@ -1,0 +1,42 @@
+#' @title  Very first function
+#'
+#' @description This instructs the student on the basics of function making
+#'
+#' @details  Welcome to STATS at OU -- we will be learning R from the ground up. RAR man!
+#'
+#' @seealso \code{\link{plot}}
+#'
+#' @param x This is the name of a vector
+#'
+#' @param ... extra arguments which will be sent to the corresponding ... in this case the plot function
+#'
+#' @return A list of x and y data and a plot of the data
+#'
+#'
+#'
+#'
+#'
+#' @export
+#'
+#' @section Making Functions:
+#'
+#' Learn every part of this simple but important function.
+#'
+#' \enumerate{
+#' \item Where does the name of the function go?
+#' \item What does the ellipsis do?
+#' \item How long is the object \code{y} in relation to \code{x}?
+#' \item Where do you find more information about \code{plot}?
+#' \item What is a list?
+#' \item what does the function \code{return} do?
+#' }
+#'
+#' @examples
+#' ####### some examples ####
+#' data <- 1:40
+#' myfirstfun(data, pch=21, bg="Blue", cex = 2.4) # x data and extra options to send to plot
+myfirstfun <- function(x, ...) { # key function "function(), name of function , ... sends extra arguments to plot
+  y <- x^2 #object on the right x^2,  name on the left "y"
+  graphics::plot(x,y,main = "My first R function", ...) # plot function -- use ?plot to learn more about
+  return(list(x=x,y=y)) # return will stop execution of code and release argument to the command line
+}

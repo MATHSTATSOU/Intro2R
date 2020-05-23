@@ -1,0 +1,266 @@
+---
+title: "Intro2R"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Intro2R}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(Intro2R)
+```
+
+
+# Introduction
+
+In any of the stats courses here in the MATH department OU,  R is central. You MUST get up to speed and learn as much as possible. R for many statisticians is the lingua Franca of practical statistics. That is not to say that other languages are not valuable. Python, Julia, C++, Mat-lab, SAS, Minitab, SPSS etc are all good and useful have their strengths and weaknesses. Being well rounded and knowledgeable in computing is a must for modern statistics whether you are implementing the classical or Bayesian approach. However, one work space at a time will be best and we will start with R after which you can learn others. 
+
+# R download
+
+Get R from a reliable source -- <https://cran.r-project.org/> download and install for your operating system.
+For instructions on how to install R and Rstudio go to <https://bookdown.org/rdpeng/rprogdatascience/getting-started-with-r.html#installation>
+
+
+# Use RStudio
+
+R by itself is a little intimidating with a `>` commandline waiting for input. To help with recording and organizing code we will use a free IDE (Integrated Development Environment) called `RStudio`. This is  free at the moment, make sure you do not pay a cent for it. If the owners ever charge for the software we will use a different front end immediately. There are alternatives which are also good but RStudio is likely ahead of the pack in its features such as package making, GIT implementation, R markdown etc.
+
+Download and install the `RStudio Desktop (Open Source License)` for your operating system -- <https://rstudio.com/products/rstudio/download/>
+
+# Learning R on your own
+
+In all of the MATH stats courses, laboratories will guide you in what needs to be learnt and this is generally contextualized to some statistical objective. This means that you learn R as you learn STATS.
+
+However, there are excellent resources available -- all FREE! These can be referenced to help you perfect your knowledge. Please go to the following website <https://bookdown.org/>. There are a range of books from elementary to advanced level all written in R markdown and knit into html. 
+
+## Getting started on your own
+
+For a good practical introduction to R you should read chapter 4 and 5 of Peng's work <https://bookdown.org/rdpeng/rprogdatascience/r-nuts-and-bolts.html#entering-input>
+
+## More advanced topics on your own
+
+Data visualization can be learnt and perfected here <https://r4ds.had.co.nz/data-visualisation.html#introduction-1> 
+
+## Advanced R on your own
+
+This topic should only be looked at by those with some experience with basic R. See <https://adv-r.hadley.nz/> 
+
+
+# Intro2R part 1: Atomic vectors
+
+## Vector creation
+
+We can create a vector by using the `c()` function. We may think of the `c` as short for "combine" -- the assignment infix `<-` labels the object with the name on the left `v`
+
+```{r}
+v <- c(1,4,5)
+v
+```
+
+Notice that the contents of the object `c(1,4,5)` are printed to the commandline by entering the name of the object `v`. We can use a function to do the same job `print(v)` 
+
+```{r}
+print(v)
+```
+
+Functions are central to R and we want to build up a good functional programming understanding of the workspace. This will come later -- for now just notice that we used a function `c()` -- it is a function because it has some text `c` followed by `(` R will be expecting a completed function either with arguments or not. 
+
+## Empty vector
+
+Many times  we will need to populate a vector with components. This will mean that an empty vector will need to be created
+
+```{r}
+v <- c()
+v
+```
+
+The problem with this is that before a new component is added -- space will need to be allotted -- this will work but will be slower than optimal.
+
+A better way would be to use the `vector` function
+
+```{r}
+v <- vector(mode = "numeric", length = 10L)
+v
+```
+
+
+## Subsetting a vector
+
+We can obtain subsets of vectors by using `[]` square brackets. R will know that `v[]` is NOT a function because of the shape of the brackets. Note that `v[i]` would be the ith component of `v`
+
+```{r}
+v <- LETTERS
+v
+v[1]
+```
+
+We could get more components
+
+```{r}
+v[2:4]
+```
+
+Or use `c()` example:
+
+```{r}
+v[c(1,3,5,6,7)]
+```
+
+
+We can assign a component using `<-`
+
+```{r}
+v[4]<-"a string of letters"
+v
+```
+
+Note that a vector is of a certain mode and will retain this even if we try to assign a number to one of the components
+
+```{r}
+print("Mode before is:")
+mode(v)
+v[26] <- 1
+v
+print("Mode after is:")
+mode(v)
+```
+
+Notice the `1` has been made into a character by quoting `"1"`
+
+## Populate a vector with and without loops
+
+We learnt how to create a vector but sometimes each component of the vector must be individually formed from other functions. In many cases this is simply done all at once using the vector proprties that R was created to perform.  
+
+### One line
+
+This will be done most often in R and you should master this idea. Many calculations will be done on this basis.
+
+```{r}
+i <- 1:10
+v <- 2*i + 10 # i is a vector -- one line calculation
+v
+```
+
+
+### For loop
+
+Sometimes components will need to be assigned with different formulas using conditions etc loops enable more sophisticated ways of assignment -- but if you dont need a loop (like above) then don't use one.
+
+The for loop takes an index and increments it by 1. Can you predict the output? Notice the for loop uses a `{}` pair of braces to put whatever number of lines of code you require. One line is executed at a time. 
+
+```{r}
+v <- vector(mode = "numeric", length = 10)
+for(i in 1:10){
+  v[i]<-2*i +10
+}
+v
+
+```
+
+
+Notice also that the print out has each line beginning with a `[]` which tells you the component number.
+
+### while loop
+
+The while loop use a condition and will continue `while` the condition is true
+
+```{r}
+i <- 1 # initialize i to get the loop started
+v <- vector(mode = "numeric", length = 10)
+while(i <= 10){
+  v[i] <- 2*i + 10
+  i <- i + 1 # increment i by 1
+}
+v
+```
+
+
+### More complex assignment using `if`
+
+Say we need to use two formulas to make assignments.  We will use the `if` condition,  then statement else statement. Look at the code
+
+```{r}
+v <- vector(mode = "numeric", length = 10)
+for(i in 1:10){
+  if(i<=5){
+  v[i]<-2*i +10 # only made when i<=5
+  }
+  else{
+    v[i] <- 3*i +10 # only made when i!<=5 (not less than or equal to 5)
+  }
+}
+v
+```
+
+
+
+# Intro2R part 2: list vectors
+
+The perfecting of lists is a very important skill to acquire in R since a list is very versatile with regard to the types of components you can add. Lists are for that reason returned from functions and since we wish to become great at functions we must understand lists. 
+
+## Creation of lists
+
+To create a list you can use the function `list`. Notice that the list can be made out of any other object type (unlike an atomic vector of a certain mode).
+
+```{r}
+l <- list(a = 1:20, b = letters, c = rnorm(10))
+l
+```
+
+We can make empty lists
+
+```{r}
+l <- vector(mode = "list", length = 3)
+
+l
+```
+
+We can populate a list in a number of ways. Note very carefully the use of the double square brackets `[[]]`. You will need to distinguish `[]` which returns a smaller list and `[[]]` an element.
+
+```{r}
+l[[1]] <- 1:10
+l[[2]] <- letters
+l[[3]] <- rnorm(4)
+l
+names(l) <- c("a", "b", "c")
+l
+```
+
+ 
+## Subsetting lists
+
+[[]] and $ do essentially the same thing.
+
+```{r}
+l[[2]]
+```
+
+ 
+ Or we coud write it
+ 
+```{r}
+l$b
+typeof(l$b)
+```
+ 
+ 
+ Notice that the output above are atomic vectors of the type made for each component of the list `l`
+ 
+ If we use `[]` look what happens
+ 
+```{r}
+l[2]
+typeof(l[2])
+```
+ 
+ 
+ 
+
