@@ -262,5 +262,67 @@ typeof(l[2])
 ```
  
  
- 
+For more information on this see <https://adv-r.hadley.nz/subsetting.html#subset-single> 
+
+You can also use names to subset (lets test our understanding of [] and [[]]) 
+
+```{r}
+l["b"]
+
+all.equal(l["b"], l$b) # notice mismatch
+
+l[["b"]]
+
+all.equal(l[["b"]], l$b) # same
+```
+
+
+
+# Intro2R part 3: matrices
+
+This is a very useful object and we will use many matrices in STATS
+
+## Creation
+
+Matrices are similar to vectors -- and are a special form of array. Lets make one:
+
+```{r}
+mat <- matrix(1:50, 
+              nrow = 10, 
+              ncol = 5, 
+              byrow = TRUE
+              )
+mat
+```
+
+We can give the matrix column and row names after the fact
+
+```{r}
+colnames(mat) <- letters[1:5]
+rownames(mat) <- LETTERS[1:10]
+mat
+```
+
+Or, we could do it all at once
+
+```{r}
+mat <- matrix(1:50, 
+              nrow= 10, 
+              ncol =5, 
+              dimnames = list(LETTERS[1:10], letters[1:5]))
+mat
+```
+
+
+## Subsetting
+
+You can subset using row andcolumn reference with `[,]` 
+
+Example -- find the element in the first row and third column
+
+```{r}
+mat[1,3]
+```
+
+
 
