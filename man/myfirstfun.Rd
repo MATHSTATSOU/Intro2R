@@ -38,7 +38,7 @@ Learn every part of this simple but important function.
 \examples{
 ####### some examples ####
 data <- 1:40
-myfirstfun(data, pch=21, bg="Blue", cex = 2.4) # x data and extra options to send to plot
+myfirstfun(x = data, pch=21, bg="Blue", cex = 2.4) # x data and extra options to send to plot
 }
 \seealso{
 \code{\link{plot}}

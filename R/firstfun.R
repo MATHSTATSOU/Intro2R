@@ -34,7 +34,7 @@
 #' @examples
 #' ####### some examples ####
 #' data <- 1:40
-#' myfirstfun(data, pch=21, bg="Blue", cex = 2.4) # x data and extra options to send to plot
+#' myfirstfun(x = data, pch=21, bg="Blue", cex = 2.4) # x data and extra options to send to plot
 myfirstfun <- function(x, ...) { # key function "function(), name of function , ... sends extra arguments to plot
   y <- x^2 #object on the right x^2,  name on the left "y"
   graphics::plot(x,y,main = "My first R function", ...) # plot function -- use ?plot to learn more about
