@@ -573,3 +573,95 @@ Now call it
 myimprovedfun(x = 1:40, col = "Red" )
 ```
 
+
+
+
+# Important packages for you to master
+
+## dplyr
+
+### Introduction
+
+Manipulating data frames using `[[]]`, `aggregate`, `subset`  etc are good but can get difficult when more complicated subsetting is needed. 
+
+If we can provide a mechanism to do one part of a complex subset at a time then what was difficult can be seen as a succession of simpler steps.
+
+There are a number of tutorials which [are useful](http://genomicsclass.github.io/book/pages/dplyr_tutorial.html) 
+
+[Also see video](https://www.youtube.com/watch?v=LRU5TxFD394) 
+
+
+### Verbs
+
+There are a number of important verbs that you need to master to gain the most out of `dplyr`
+
+  1. select()	select columns
+  2. filter()	filter rows
+  3. arrange()	re-order or arrange rows
+  4. mutate()	create new columns
+  5. summarise()	summarise values
+  6. group_by()	allows for group operations in the "split-apply-combine" concept
+  
+  
+#### `select()`
+
+The first verb is easy to use, select columns (we don't need to use quotes))
+
+```{r}
+library(dplyr)
+sub <- select(ddt, c(LENGTH,WEIGHT))
+head(sub)
+```
+
+When using dplyr it is useful to use the pipe operator.
+
+```{r}
+filter(ddt, WEIGHT > 2000)
+```
+
+Or you can use a `pipe` written `%>%`. Pipe the data into te first position of the `filter` function.
+
+```{r}
+ddt %>% filter(., WEIGHT > 2000)
+```
+#### Chaining the commands together
+
+We can pipe the output of one verb into the next, notice we do not need to put a `.` in the function - it is assumed.
+
+```{r}
+ddt %>% filter(WEIGHT > 2000) %>% select(LENGTH) 
+```
+
+
+### `arrange`
+
+We can arrange the rows -- example -- suppose you wish to reorder the rows so that the LENGTH variable descends
+
+```{r}
+obj <- ddt %>% arrange(desc(LENGTH)) 
+head(obj)
+```
+
+You can do more sophisticated arrangements. Use `.by_group`
+
+Suppose we wish to arrange the rows by LENGTH within groups of SPECIES
+
+
+```{r}
+by_SPECIES <- ddt %>% group_by(SPECIES)
+head(by_SPECIES)
+obj2 <- by_SPECIES %>% arrange(desc(LENGTH), .by_group =TRUE)
+tail(obj2)
+```
+
+### `mutate`
+
+
+Create new columns -- say $DENSITY = LENGTH/WEIGHT$ 
+
+```{r}
+ddt2 <- ddt %>% mutate(DENSITY = LENGTH/WEIGHT)
+head(ddt2)
+```
+
+
