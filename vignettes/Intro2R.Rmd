@@ -461,7 +461,7 @@ with(mpg, plot(displ, cyl))
 
 You can see that the above plot is minimal in its sophistiation but with a little work can be made useful. We will use a lot of base plots in the course.
 
-However a more sophisticated way of plotting is to use a package that uses the `grammar of graphics` or `gg` for short.
+However a more sophisticated way of plotting is to call functions from a package that uses the `grammar of graphics` or `gg` for short.
 
 A good introduction to this can be found here: [gg graphics](https://r4ds.had.co.nz/data-visualisation.html#introduction-1)
 
@@ -487,7 +487,7 @@ We may choose a different plot
 ```{r}
 g <- ggplot(mpg)
 
-g <- g + geom_boxplot(aes(x = drv, y = hwy, fill = drv ))
+g <- g + geom_boxplot(aes(x = drv, y = hwy, fill = drv )) 
 g
 ```
 
@@ -559,7 +559,7 @@ myimprovedfun <- function(x, ...) { # key function "function(), name of function
   y <- x^2 #object on the right x^2,  name on the left "y"
   df <- data.frame(x=x, y= y)
   g <- ggplot(df)
-  g <- g + geom_point(aes(x = x, y=y, ...))
+  g <- g + geom_point(aes(x = x, y=y, ...)) + ggtitle("Improved function")
   print(g)
   return(list(x=x,y=y, sumdf = summary(df))) # return will stop execution of code and release argument to the command line
 }
