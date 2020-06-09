@@ -1,6 +1,6 @@
 #' @title  Very first function
 #'
-#' @description This instructs the student on the basics of function making
+#' @description  This instructs the student on the basics of function making
 #'
 #' @details  Welcome to STATS at OU -- we will be learning R from the ground up. RAR man!
 #'
