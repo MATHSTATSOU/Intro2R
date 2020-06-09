@@ -56,7 +56,7 @@ myfirstfun <- function(x, ...) { # key function "function(), name of function , 
 #'   \item{LENGTH}{Length of fish in cm}
 #'   \item{MILE}{Miles up river where fish is caught}
 #'   \item{RIVER}{River name}
-#'   \item{SPECIES}{Fish speccies}
+#'   \item{SPECIES}{Fish species}
 #'   \item{WEIGHT}{Weight of fish}
 #' }
 #'
