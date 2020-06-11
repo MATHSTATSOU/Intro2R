@@ -62,3 +62,29 @@ myfirstfun <- function(x, ...) { # key function "function(), name of function , 
 #'
 #' @source \url{https://www.routledge.com/Statistics-for-Engineering-and-the-Sciences-Sixth-Edition/Mendenhall-Sincich/p/book/9781498728850}
 "ddt"
+
+
+
+#' @title Flights data set.
+#'
+#' @description  A dataset containing measurements on flights
+#'
+#' @details This is a standard data set used in tutorials showing how to use the data.table package.
+#'
+#' @format A data frame with 253316  rows and 11 variables:
+#' \describe{
+#'   \item{year}{year}
+#'   \item{month}{month}
+#'   \item{day}{day}
+#'   \item{dep_delay}{departure delay}
+#'   \item{arr_delay}{arrival delay}
+#'   \item{carrier}{carrier}
+#'   \item{origin}{origin}
+#'   \item{dest}{destination}
+#'   \item{air_time}{time in the air}
+#'   \item{distance}{distance travelled}
+#'   \item{hour}{hour}
+#' }
+#'
+#' @source \url{https://raw.githubusercontent.com/Rdatatable/data.table/master/vignettes/flights14.csv}
+"flights"

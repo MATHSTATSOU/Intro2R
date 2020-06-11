@@ -664,4 +664,61 @@ ddt2 <- ddt %>% mutate(DENSITY = LENGTH/WEIGHT)
 head(ddt2)
 ```
 
+## `data.table`
+
+
+![data datable](logo.png)
+
+Another very important package is `data.table`. This a very much enhanced version of the `data.frame`. You can create it using `data.table()` or when reading in data use `fread`. Existing data frames can be convered with `setDT()`.
+
+To get some good information look at the help file associated with the package and the vignette `vignette(package="data.table")`
+
+Also a very good website to get up and running is <https://github.com/Rdatatable/data.table/wiki> see also <https://cloud.r-project.org/web/packages/data.table/vignettes/datatable-intro.html>
+
+
+### Some useful data 
+
+The code below was used to make a local copy of flights data for the current package
+
+```{r,eval=FALSE}
+library(data.table)
+flightfile <-"https://raw.githubusercontent.com/Rdatatable/data.table/master/vignettes/flights14.csv"
+}
+flights <- fread(flightfile)
+usethis::use_data(flights)
+```
+
+### Creating a `data.table`
+
+```{r}
+library(data.table)
+ddt2<-copy(ddt) # ddt is locked in the package
+DT <- setDT(ddt2) 
+class(DT)
+```
+
+#### Look at the enhancements
+
+`DT[i,j,by]` the i is for rows, j columns and by for groups.
+
+
+##### `i`
+
+```{r}
+DT[WEIGHT > 2000]
+```
+
+#### `j`
+
+Notice that since I select a single column it is returned as a vector
+
+```{r}
+DT[WEIGHT > 2000, LENGTH]
+```
+
+#### `by`
+
+```{r}
+DT[WEIGHT > 2000, LENGTH, by =SPECIES]
+```
 
