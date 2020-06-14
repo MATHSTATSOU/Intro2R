@@ -8,6 +8,9 @@
 #' @param n Number of Bernoulli trials
 #' @param p Probability of a success
 #'
+#' @importFrom grDevices  rainbow
+#' @importFrom graphics  barplot
+#'
 #' @return Barplot and table of relative frequencies
 #' @export
 #'
@@ -16,7 +19,7 @@
 mybin=function(iter=100,n=10, p=0.5){
   # make a matrix to hold the samples
   #initially filled with NA's
-  sam.mat=matrix(NA,nr=n,nc=iter, byrow=TRUE)
+  sam.mat=matrix(NA,nrow=n,ncol=iter, byrow=TRUE)
   #Make a vector to hold the number of successes in each trial
   succ=vector(mode="numeric", length=iter)
   for( i in 1:iter){

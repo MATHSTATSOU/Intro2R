@@ -1,6 +1,11 @@
 ---
 title: "Intro2R"
-output: rmarkdown::html_vignette
+output: 
+  prettydoc::html_pretty:
+    theme: cayman
+    highlight: github
+    math: katex
+             
 vignette: >
   %\VignetteIndexEntry{Intro2R}
   %\VignetteEngine{knitr::rmarkdown}
