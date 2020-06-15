@@ -5,6 +5,7 @@ output:
     theme: cayman
     highlight: github
     math: katex
+    df_print: paged
              
 vignette: >
   %\VignetteIndexEntry{Intro2R}
@@ -725,5 +726,18 @@ DT[WEIGHT > 2000, LENGTH]
 
 ```{r}
 DT[WEIGHT > 2000, LENGTH, by =SPECIES]
+```
+
+In `DT[i,j,by]` as long as the `j` part is a list then the result will be a data.table -- you can ensure a list by enclosing the `j` expression using `list()` or `.()`
+
+
+We will use the `flights` data set already available in the `intro2R` package.
+
+Look how big the `flights` data set is and note how quickly `data.table` handles subsetting  in the following examples.
+
+```{r}
+dim(flights)
+names(flights)
+flights[,.(dest = dest , distance = distance)]
 ```
 
