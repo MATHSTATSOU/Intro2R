@@ -736,6 +736,7 @@ We will use the `flights` data set already available in the `intro2R` package.
 Look how big the `flights` data set is and note how quickly `data.table` handles subsetting  in the following examples.
 
 ```{r}
+class(flights)
 dim(flights)
 names(flights)
 flights[,.(dest = dest , distance = distance)]
