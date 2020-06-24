@@ -27,6 +27,7 @@ library(Intro2R)
 
 # Introduction
 
+
 In any of the stats courses here in the MATH department OU,  R is central. You MUST get up to speed and learn as much as possible. R for many statisticians is the lingua Franca of practical statistics. That is not to say that other languages are not valuable. Python, Julia, C++, Mat-lab, SAS, Minitab, SPSS etc are all good and useful have their strengths and weaknesses. Being well rounded and knowledgeable in computing is a must for modern statistics whether you are implementing the classical or Bayesian approach. However, one work space at a time will be best and we will start with R after which you can learn others. 
 
 # R download

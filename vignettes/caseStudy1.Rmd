@@ -1,0 +1,38 @@
+---
+title: "caseStudy1"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{caseStudy1}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+
+
+
+```
+
+```{r setup}
+library(Intro2R)
+```
+
+
+# Introduction
+
+The first case study relates to the `BONES` data set.
+
+```{r}
+with(bones, t.test(LWRATIO, mu=8.5, conf.level=0.99))
+```
+
+
+
+
+
+
+
