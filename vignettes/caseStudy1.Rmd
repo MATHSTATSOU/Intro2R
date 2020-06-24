@@ -24,13 +24,58 @@ library(Intro2R)
 
 # Introduction
 
-The first case study relates to the `BONES` data set.
+The first case study relates to the `BONES` data set. The information and questions come directly from our text, MS page 386-387 
+
+>
+Humerus bones from the same species of animal tend to have approximately the same length-to-width
+ratios.When fossils of humerus bones are discovered, archeologists can often determine the species of
+animal by examining the length-to-width ratios of the bones. It is known that species A has a mean ratio
+of 8.5. Suppose 41 fossils of humerus bones were unearthed at an archeological site in East Africa,
+where species A is believed to have inhabited. (Assume that the unearthed bones are all from the same
+unknown species.) The length-to-width ratios of the bones were measured and are listed in Table 8.2.
+We wish to test the hypothesis that m, the population mean ratio of all bones of this particular
+species, is equal to 8.5 against the alternative that it is different from 8.5, i.e., we wish to test whether
+the unearthed bones are from species A.
+
+
+The questions concerning the data set are :
+
+
+>
+a. Suppose we want a very small chance of rejecting H0, if, in fact, m is equal to 8.5. That is, it
+is important that we avoid making a Type I error. Select an appropriate value of the significance
+level, a.
+b. Test whether m, the population mean length-to-width ratio, is different from 8.5, using the
+significance level selected in part a.
+
+
+# Solution
+
+The text book uses a Z approximation assuming that n=41 validates the approximation (large sample).
+
+You should realize by now that given the assumptions of the t test are upheld we do not need to be concerned about large/small sample issues. The t-test will be valid. The only assumption that might cause a problem when n is small is the assumption of Normality $\bar{Y}_i\stackrel{iid}{\sim}N$. If n is large  $\bar{Y}_i\stackrel{iid}{\sim}N$ even if $Y_i$ is not normal, due to the CLT.
+
+## a,b
+
+We will use the same $\alpha=0.01$ because we wish to have a small type 1 error.
+
+The hypotheses are:
+
+$$H_0:\mu=8.5\\H_1:\mu\ne 8.5$$
+
+
+
+### R code
+
+We will now carry out a one sample t test. Notice that by default this is a two sided test -- this is needed because of the alternate hypothesis $H_1:\mu \ne 8.5$
 
 ```{r}
 with(bones, t.test(LWRATIO, mu=8.5, conf.level=0.99))
 ```
 
+## Conclusion
 
+We will reject the Null at $\alpha=0.01$ in favour of the alternate.
 
 
 
