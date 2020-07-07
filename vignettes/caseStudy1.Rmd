@@ -1,6 +1,12 @@
 ---
 title: "caseStudy1"
-output: rmarkdown::html_vignette
+output: 
+  prettydoc::html_pretty:
+    theme: cayman
+    highlight: github
+    math: katex
+    df_print: paged
+             
 vignette: >
   %\VignetteIndexEntry{caseStudy1}
   %\VignetteEngine{knitr::rmarkdown}
@@ -28,7 +34,7 @@ The first case study relates to the `BONES` data set. The information and questi
 
 >
 Humerus bones from the same species of animal tend to have approximately the same length-to-width
-ratios.When fossils of humerus bones are discovered, archeologists can often determine the species of
+ratios. When fossils of humerus bones are discovered, archeologists can often determine the species of
 animal by examining the length-to-width ratios of the bones. It is known that species A has a mean ratio
 of 8.5. Suppose 41 fossils of humerus bones were unearthed at an archeological site in East Africa,
 where species A is believed to have inhabited. (Assume that the unearthed bones are all from the same
@@ -42,10 +48,10 @@ The questions concerning the data set are :
 
 
 >
-a. Suppose we want a very small chance of rejecting H0, if, in fact, m is equal to 8.5. That is, it
+a. Suppose we want a very small chance of rejecting $H_0$, if, in fact, $\mu$ is equal to $8.5$. That is, it
 is important that we avoid making a Type I error. Select an appropriate value of the significance
 level, a.
-b. Test whether m, the population mean length-to-width ratio, is different from 8.5, using the
+b. Test whether $\mu$, the population mean length-to-width ratio, is different from $8.5$, using the
 significance level selected in part a.
 
 
@@ -77,7 +83,7 @@ with(bones, t.test(LWRATIO, mu=8.5, conf.level=0.99))
 
 We will reject the Null at $\alpha=0.01$ in favour of the alternate.
 
-
+We now have statistical evidence that the bones do not come from species A.
 
 
 

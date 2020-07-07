@@ -16,7 +16,10 @@ Imports:
     tidyverse,
     dplyr,
     data.table,
-    prettydoc
+    prettydoc,
+    readxl,
+    stringr,
+    purrr
 Suggests: 
     knitr,
     rmarkdown
