@@ -4,7 +4,8 @@
 \name{ddt}
 \alias{ddt}
 \title{DDT data set.}
-\format{A data frame with 144 rows and 6 variables:
+\format{
+A data frame with 144 rows and 6 variables:
 \describe{
   \item{DDT}{ppm DDT in the flesh of fish}
   \item{LENGTH}{Length of fish in cm}
@@ -12,7 +13,8 @@
   \item{RIVER}{River name}
   \item{SPECIES}{Fish species}
   \item{WEIGHT}{Weight of fish}
-}}
+}
+}
 \source{
 \url{https://www.routledge.com/Statistics-for-Engineering-and-the-Sciences-Sixth-Edition/Mendenhall-Sincich/p/book/9781498728850}
 }

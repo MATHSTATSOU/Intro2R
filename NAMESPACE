@@ -2,5 +2,6 @@
 
 export(mybin)
 export(myfirstfun)
+export(rmdfile)
 importFrom(grDevices,rainbow)
 importFrom(graphics,barplot)

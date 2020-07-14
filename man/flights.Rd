@@ -4,7 +4,8 @@
 \name{flights}
 \alias{flights}
 \title{Flights data set.}
-\format{A data frame with 253316  rows and 11 variables:
+\format{
+A data frame with 253316  rows and 11 variables:
 \describe{
   \item{year}{year}
   \item{month}{month}
@@ -17,7 +18,8 @@
   \item{air_time}{time in the air}
   \item{distance}{distance travelled}
   \item{hour}{hour}
-}}
+}
+}
 \source{
 \url{https://raw.githubusercontent.com/Rdatatable/data.table/master/vignettes/flights14.csv}
 }

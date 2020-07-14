@@ -10,7 +10,7 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Depends: R (>= 2.10)
-RoxygenNote: 7.0.2
+RoxygenNote: 7.1.1
 Imports:
     ggplot2,
     tidyverse,
@@ -19,7 +19,8 @@ Imports:
     prettydoc,
     readxl,
     stringr,
-    purrr
+    purrr,
+    s20x
 Suggests: 
     knitr,
     rmarkdown

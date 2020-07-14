@@ -1,0 +1,509 @@
+---
+title: "Laboratory3"
+output: 
+  prettydoc::html_pretty:
+    theme: cayman
+    highlight: github
+    math: katex
+    df_print: paged
+    toc: yes
+             
+vignette: >
+  %\VignetteIndexEntry{Laboratory3}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "ws#>",
+  fig.align = "center"
+)
+
+# directory to Lab
+dirdl <- system.file("Lab3",package = "Intro2R")
+
+# create rmd link
+
+library(Intro2R)
+
+
+```
+
+
+# Introduction
+
+This is the first of 2  labs (Labs 3,4) which  introduce the student to Simple Linear Regression (SLR). This is out of sequence with the theory class and is done now because we need to get started on the second and largest project as soon as possible.
+
+The second project is an application of SLR theory to a data set. Each student must choose a suitable (this is important) data set that is well explained from a SLR model. For the purposes of this course this will mean that you should choose x and y variables that show a straight line "trend".
+
+Please use the function `pairs(df)` where `df` is a dataframe to determine the suitability of the data for SLR.
+
+Example:
+
+```{r}
+pairs(~ LENGTH + WEIGHT + DDT,data=ddt)
+```
+
+We could have invoked the function as `pairs(ddt)` however only three variables are quantitative and of interest. Notice that plots of `LENGTH Vs WEIGHT` or `WEIGHT Vs LENGTH` are the only ones that have something approximating a straight line. As we will show later a quadratic linear model gives a better fit than the straight line.
+
+SLR is Multiple Linear Regression with just one `x` variable and will serve as a suitable introduction to the more complex MLR studied in other courses.
+
+Treat these two labs as a first pass, practical and experimental introduction to SLR. The depth and theoretical understanding will necessarily come later as we build up our distributional and statistical understanding.
+
+# Objectives
+
+
+In this lab you will learn how to:
+
+1.	Create scatter plots.
+2.	Define a linear model in R.
+3.	Plot a least squares regression line.
+4.	Find the residuals and plot them.
+5.	Interpret regression summary output.
+6.	Make predictions.
+7.	Use a "shiny" server to make interactive plots
+
+
+# R Skills
+
+## Scatter plots
+
+There are two methods we will use -- base R and ggplot. Please note that there are many helps available in `r rmdfile("Lab3.R","Lab3.R", "Lab3")`
+
+### Method 1, Base R
+
+There are a number of functions which will be helpful to our plotting using Base R. Below are some of the functions we will use in this course for scatter plots.
+
+There are some distinctions in usage which I will bring out with examples
+
+```{r ,eval=FALSE}
+plot()
+curve()
+abline()
+segments()
+polygon()
+```
+
+#### `plot()`
+
+Note the use of the function `with()`. This function allows the names on the columns of a dataframe be attached to their columns so that it is possible to refer to a column by its name.
+
+Normally this will be done using `df$name` but we can do the same by using `with(df, name)`.
+
+Below we use `with` and the function `plot`. Now we can find the vector `ddt$LENGTH` without the `$` etc.
+
+```{r}
+with(ddt, plot(LENGTH,WEIGHT))
+```
+
+Notice that `plot` uses an x, then y. There are plenty of other options avalable to embellish the output.
+
+To find the extra options see `?plot` on the cmd line.
+
+We will use some additional options to improve the plot
+
+
+```{r}
+with(ddt,
+     plot(x=LENGTH,
+          y=WEIGHT,
+          pch = 21, # open circle
+          bg = "Blue", #bg color
+          main = "Plot using Base R" # Title
+          )
+     ) 
+```
+
+Notice that if you name the optional variables it will not matter if you rearrange the options different to how the function was defined. But `plot(WEIGHT,LENGTH)` will make the x variable `WEIGHT` and the y variable `LENGTH` and hence a different plot will result.
+
+#### `curve()`
+
+We will now show how the function `curve` can be used. There are two features of `curve` which make it very useful. 
+
+  1. curve takes a function in x
+  2. It has an `add` option which means it can add a plot to an existing plot
+  
+
+  We will use both these features below. Notice that we plot as before with the `plot` function and then we make a linear model from the exponential 
+  
+  $$Y=Ae^{BX}$$
+  becomes
+  
+  $$log(Y) = log(A)+BX$$
+  This is a linear model -- to get back to the Y scale we must exponentiate
+  
+  $$Y=e^{log(A)+BX}$$
+  Notice that $log(A)$ is the first coefficient, and $B$ is the second coefficient.
+  
+  Using `with` and braces we get
+  
+```{r}
+with(ddt, 
+     {plot(LENGTH,WEIGHT, main = "Add a plot with curve()")
+      ylm <- lm(log(WEIGHT)~LENGTH)
+      f<-function(x){
+        cf<-coef(ylm)
+        exp(cf[1]+cf[2]*x)
+      }
+      curve(f(x),add=TRUE, lwd=2, col = "purple")
+     }
+)
+```
+  
+
+Notice that because the function `f(x)` was added to the previous plot, the values of `x` were taken from the original data used in the first plot.
+
+The `lm` function creates all the estimating coefficients for the linear model and does all the heavy lifting. We will learn more about this function in these labs and finally when we reach chapter 10 of the text.
+
+
+### Method 2, ggplot
+
+The next method uses a library called `ggplot2` and you can download this from cran.
+
+This package is based on the `grammar of graphics` and is named after the book written by Leland Wilkinson "The Grammar of Graphics". 
+
+The R package was organized and developed by Hadley Wickham and is now very popular and has many improvements added over the years. This attempts to put in place the object oriented grammar as Wilkinson layed it out.
+
+To get the most out of it please look at the following websites:
+
+![<https://r4ds.had.co.nz/graphics-for-communication.html>](R4datascience.png){ width=30% }
+
+
+![<https://r-graphics.org/index.html>](Rgraphics.jpg){ width=30% }
+
+#### Getting started
+
+The package uses a different programming approach called "meta-programming". You can read about it here: 
+<https://adv-r.hadley.nz/metaprogramming.html>
+
+This means that operators can be redefined like the inline `+` which acts to add layers and where variables from data frames can be named directly (like `with()`) with or without quotes.
+
+To get a feel for how the system works we shall take a few examples.
+
+```{r}
+library(ggplot2)
+g <- ggplot(ddt,aes(x = LENGTH, y = WEIGHT)) + geom_point()
+g
+```
+
+Notice that the first function `ggplot()` takes a data frame as an argument and an aesthetic function `aes()` which defines what constitutes the `x` and `y` variables. This by itself produces a layer with no content. To this is added a geometry -- in this case points. These two layers are combined and called `g` which when printed produces the plot.
+
+We could increase the complexity of the plot by adding more layers.
+
+We will add a smoother to the points by using the object created previously and adding a new layer!
+
+```{r}
+g2 <- ggplot(ddt, aes(x=LENGTH, y=WEIGHT)) + geom_point()+ geom_smooth(method = lm,formula=y~x + I(x^2), se = FALSE)
+g2
+
+```
+
+
+There are many more features we could add to the plot. For example we could color the points based on the `SPECIES` of the fish. We may need to color the line so that it differs with point colors. Also, lets add a title.
+
+```{r}
+g3 <- ggplot(ddt, aes(x=LENGTH, y=WEIGHT)) + geom_point(aes(color = SPECIES))+ geom_smooth(method = lm,formula=y~x + I(x^2), se = FALSE, color = "Gray")
+g3 <- g3 + labs(title = "Quadratic with  species distribution")
+g3
+
+
+```
+
+
+
+Please visit the websites linked above to learn more about annotation, zooming and themes.
+
+
+# Linear model
+
+There are many different statistical models we may be interested in. The most common classification is 
+
+>
+  1. Linear - use `lm()`
+  2. Non-Linear - use `nls()` + others
+  
+  
+The linear models are `LINEAR` in the parameters. Please note that in the models we will examine $Y$ is random and therefore the trend will be the relationship between the mean value of the $Y$ and $x$ and this is symbolized by the notation $E(Y) = f(x)$
+
+For example 
+
+$$ E(Y)=\beta_0e^{\beta_1 x}$$
+Is NOT linear in the parameters $\beta_0$ and $\beta_1$ and would be an example of a non-linear model.
+
+Sometimes we can transform non-linear models to linear, example:
+
+$$log(E(Y)) = log(\beta_0) + \beta_1 x$$
+
+We simply rewrite this as 
+
+$$E(Y)^* = \beta_0^* + \beta_1 x $$
+To use this with original data $x,y$ you would need to transform the $y$, to form a new data set $x,y^*$ where $y^*=log(y)$.
+
+## Objectives
+
+Our initial objectives will be to find estimates of all parameters.
+
+Estimates come in two forms 
+
+>
+  1. Point estimates 
+  2. Interval estimates (usually confidence intervals)
+  
+
+### Point estimates
+
+There are many ways to create point estimates -- we will use a method known as **least squares**.
+
+To understand this method will require a lot of theory. This will be built up during the course.
+
+For now, understand that there are three important line segments in a regression plot that are used to build estimating and diagnostic statistics.
+
+>
+  1. The residual $r_i = y_i-\hat{y}_i$
+  2. The model residual $m_i= \hat{y}_i-\bar{y}_i$
+  3. The Total residual $t_i = y_i-\bar{y}_i$
+  
+There is a relationship between these residuals known as the sum of squares identity.
+
+
+$$
+\sum_{i=1}^{n}t_i^2 = \sum_{i=1}^{n}m_i^2 + \sum_{i=1}^{n}r_i^2 \\
+TSS = MSS + RSS
+$$
+Remember this as: The total sum of squares = the model sum of squares + the residual sum of squares.
+
+#### RSS
+
+The residual sum of squares is 
+
+$$RSS = \sum_{i=1}^n r_i^2 $$
+
+The values of the estimating parameters $\hat{\beta}$ are found by finding the line that gives the least sum of squares (smallest RSS). When this is done the following result follows
+
+$$\hat{\beta}_1=\frac{SS_{XY}}{SS_{XX}}$$
+where
+
+$$SS_{XY}=\sum_{i=1}^n (x_i-\bar{x})(y_i-\bar{y})$$
+and
+
+$$\hat{\beta}_0 = \bar{y}-\hat{\beta}_1\bar{x}$$
+
+
+### `lm()` and estimates
+
+
+To carry out the above we use a function called `lm()` which stands for *linear model*.
+
+The idea here is to create an object using `lm` and then extract whatever summaries you need by operating on the object with functional methods.
+
+To see this we will fit a linear model to `WEIGHT Vs LENGTH` in the ddt example assuming the model
+
+$$y_i = \beta_0 + \beta_1 x_i +\epsilon_i\\
+\epsilon_i\stackrel{iid}{\sim}N(0,\sigma^2)$$
+
+#### plot the data
+
+We know how to do this
+
+```{r}
+plot(WEIGHT~LENGTH, data = ddt)
+```
+
+
+#### fit a straight line
+
+Use `lm` and create an object `ylm` and then extract what we need
+
+```{r}
+ylm <- with(ddt,  lm(WEIGHT ~ LENGTH))
+coef(ylm)
+```
+
+This means that 
+
+$$\hat{y} = \hat{\beta}_0 + \hat{\beta}_1 x$$
+
+can be written with the estimates included
+
+$$\hat{y} = -483.67165 + 35.81634x$$
+
+We can find all the residuals by operating on the lm object with `residuals()`
+
+```{r}
+res <- residuals(ylm)
+head(res)
+```
+
+
+many other methods can be used on objects with class "lm".
+
+```{r}
+methods(class="lm")
+```
+
+
+for example we could use the function `plot` on the lm object `ylm`. The plot function will produce 4 plots we will take the first one `which =1`
+
+```{r}
+plot(ylm, which = 1)
+```
+
+The above plot allows us to diagnose the model for the data provided.
+
+If the data is a random sample and is representative of the population then the residuals should represent a representative sample of errors in the population. If the errors are Normally distributed with constant variance and zero mean then we should see a constant band about a mean of zero. That is the trend should be an approximately straight line with zero slope through the x axis.
+
+In this case there is a slight quadratic which means the fit is possibly inadequate and an adjustment to the model could be made by adding an extra term in $x^2$.
+
+#### extra term added to the model
+
+We will now add an extra term to the model 
+
+```{r}
+ylm2 <- with(ddt, lm(WEIGHT ~ LENGTH + I(LENGTH^2)))
+coef(ylm2)
+```
+
+
+So we have the coefficients - but is this a *better* model?  We must choose based upon some criterion.
+
+We will use Adjusted R squared. Note that `summary()` has a method for class "lm"
+
+```{r}
+summary(ylm)$adj.r.squared
+summary(ylm2)$adj.r.squared
+```
+
+We pick the model with the larger adjusted R squared.
+
+We can make a choice using a hypothesis test
+
+$$H_0: \rm{extra \;term \;is \; not\; needed}$$
+The extra term is the quadratic in $LENGTH^2$ -- notice the order of arguments (simple, complex) in the function anova (Analysis Of Variance)
+
+```{r}
+anova(ylm,ylm2)
+```
+
+The p value (0.0356) is smaller than $\alpha = 0.05$ therefor we reject the NULL hypothesis and assume the extra term is needed.
+
+
+Please examine the `Lab3.R` code for more examples that will help you with the lab.
+
+#### Interval estimates
+
+We will need interval estimates for the betas. We can use the package `s20x`
+
+```{r}
+library(s20x)
+ciReg(ylm2)
+```
+
+The above are 95% confidence intervals for the three beta parameters.
+
+#### Invetigate the residuals for quadratic
+
+```{r}
+plot(ylm2, which = 1)
+```
+
+Notice that the residual analysis shows a closer approximation to the model assumptions for $\epsilon$.
+
+### Plot both estimating models
+
+```{r}
+m <- ggplot(ddt, aes(x = LENGTH, y = WEIGHT)) + geom_point()
+m <- m + geom_smooth(color = "Green", method = "lm",formula = (y~x + I(x^2))) 
+m <- m + geom_smooth(color = "Red", method = "lm", formula = (y ~ x)) + labs(title = "Two models, green \"best\" ")
+m
+```
+
+
+
+# Non-linear approach
+
+We will use a different function for the non linear model. In R it is `nls()` which stands for *Nonlinear Least Squares*.
+
+
+
+Please see <https://data-flair.training/blogs/r-nonlinear-regression/> for more  information.
+
+## Example
+
+Take the same `ddt` data set and try an exponential model.
+
+$$ E(Y) = \beta_0e^{\beta_1x}\\
+y_i= \beta_0e^{\beta_1x_i} + \epsilon_i\\
+\epsilon_i \stackrel{iid}{\sim}N(0,\sigma^2)$$
+
+### Code
+
+```{r,eval=TRUE}
+ylm3 <- nls(WEIGHT ~ b0*exp(b1*LENGTH),data = ddt, start = list(b0 = 100, b1=0.05), algorithm = "port")
+coef(ylm3)
+
+```
+There are many methods available for this class
+
+```{r}
+methods(class = "nls")
+```
+
+
+
+We can transform to a linear model and check the results
+
+```{r}
+ylm4 <- lm(log(WEIGHT)~LENGTH, data = ddt)
+cf<-coef(ylm4)
+list(exp(cf[1]), cf[2])
+```
+
+They are not the same but close.
+
+### Plot 
+
+We will plot the estimating curve using the non linear exponential model and compare it with the quadratic
+
+```{r}
+gnls <- ggplot(ddt, aes(x = LENGTH, y = WEIGHT)) + geom_point()
+gnls <- gnls + geom_smooth(method = "nls",  formula = 'y ~ b0*exp(b1*x)', 
+                           method.args = list(start = list(b0 =100,b1=0.05)),
+                           se = FALSE, col = "purple")
+gnls <- gnls + labs(title = "Non linear model using \"nls\": purple and linear model using \"lm\": green")
+
+gnls <- gnls + geom_smooth(color = "Green", method = "lm",formula = (y~x + I(x^2))) 
+gnls
+
+```
+
+
+The models are very similar but diverge for LENGTH < 25.
+
+# Interpretation of regression summary output
+
+The linear strait line model used for the `WEIGHT Vs LENGTH` ddt data can be summarized. You will need to be able to interpret the output.
+
+```{r}
+summary(ylm)
+```
+
+There are 4 basic blocks of output above.
+
+>
+  1. The call: This gives the model formula and tells you what the y and x variables are
+  2. Residuals: 5 number summary, the median should be about 0 and other numbers symmetrical about it.
+  3. Coefficients: The point estimate $\hat{\beta}_0 = -483.672, \hat{\beta}_1=35.816$ and other details 
+  4. 3 lines. line 1 $\hat{\sigma} = 285.7$. Line 2 $R^2 = 0.4285$ and Line 3 which is *largely* redundant for SLR.
+  
+  What does all this tell you? From the output we can write down the estimating line
+  
+  $$ \hat{WEIGHT} = -483.672 + 35.816 LENGTH $$
+
+
+
+>
+  1. This means that we can say that for every one unit increase in LENGTH the average WEIGHT will increase by 35.816
+  2. $R^2 = 0.43$ this means that 43% of the variability in WEIGHT is explained by the model through the LENGTH ($0\le R^2\le 1$ ). This is not a great fit and will mean that prediction interval widths will be large.
+  3. The P value is $2\times 10^{-16}$, this gives strong evidence against $H_0:\beta_1=0$. We conclude that WEIGHT is related to LENGTH and LENGTH is needed in the model.

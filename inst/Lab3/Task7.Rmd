@@ -1,0 +1,69 @@
+---
+title: "Task 7: Lab 3"
+author: "Your name"
+date: "`r Sys.Date()`"
+output: html_document
+runtime: shiny
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+This R Markdown document is made interactive using Shiny. Unlike the more traditional workflow of creating static reports, you can now create documents that allow your readers to change the assumptions underlying your analysis and see the results immediately. 
+
+To learn more, see [Interactive Documents](http://rmarkdown.rstudio.com/authoring_shiny.html).
+
+## Inputs and Outputs
+
+You can embed Shiny inputs and outputs in your document. Outputs are automatically updated whenever inputs change.  This demonstrates how a standard R plot can be made interactive by wrapping it in the Shiny `renderPlot` function. In the case below we use the `selectInput` function to create the input widget used to drive the plot.
+
+There are other widgets we can make!!
+
+Notice that there are essentially only two parts
+
+ 1. Input (Controls)
+ 2. Render ( Often a plot)
+
+```{r slr, echo=FALSE}
+library(ggplot2)
+# DATA
+spruce.df = read.csv("SPRUCE.csv")#MS pg478
+fin.df = read.csv("FINTUBES.csv")
+
+# INPUTS
+inputPanel(
+  
+  
+  selectInput("plotg", "Choose plot type",
+      list(`points` = c("g", "gheat", "gratio"),
+           `point size` = c("gsheat", "gsratio")
+      )
+    )
+)
+
+renderPlot({
+  
+ g = ggplot(fin.df, aes(x = RATIO, y = HEAT)) + geom_point() 
+
+ gh = g + geom_point(aes(col = HEAT)) 
+ 
+ gr = g + geom_point(aes(col = RATIO)) 
+ 
+ gsh =  g + geom_point(aes(size = HEAT, col = HEAT))
+ 
+ gsr = g + geom_point(aes(size = RATIO, col = RATIO))
+  
+ if(input$plotg == "g") print(g)
+ 
+ if(input$plotg == "gheat")   print(gh)
+ 
+ if(input$plotg == "gsratio")   print(gsr)
+ 
+ if(input$plotg == "gsheat")   print(gsh)
+ 
+ if(input$plotg == "gratio")   print(gr)
+ 
+   
+})
+```
