@@ -20,7 +20,8 @@ Imports:
     readxl,
     stringr,
     purrr,
-    s20x
+    s20x,
+    gpairs
 Suggests: 
     knitr,
     rmarkdown
