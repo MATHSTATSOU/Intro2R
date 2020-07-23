@@ -175,6 +175,7 @@ hist(mnt2,xlim = c(0,10),main = "Small pop.", xlab = "replace, sample mean")
 ## Conclusions
 
 When sampling as shown there is little difference in results between replacement and non replacement when the population is large -- look at the sampling distributions of the mean. BUT -- and here is the rub! When the population and sample size are comparable `n/N=` `r round(n/length(pop2),4)` the distributions of the sample means  are very different. Comparing  *NO replacement* with *replacement* the sample means are on average approximately the same  and the range of the means is smaller. The standard deviation of the sample means is significantly smaller. 
+$IQR/s$ is a measure to test for normality. If $IQR/s\approx 1.3$ then the sample is consistent with having a Normal distribution.
 
 ```{r}
 stdf2 # Summary of sample means No replacement
@@ -187,7 +188,9 @@ IQR(mnt2)/sd(mnt2)
 ```
 
 
-This is a similar result for  the case of a  hypergeometric distribution. Where the variance of $Y = \sum_{i=1}^n Y_i$ is $Var(Y)=npq\frac{N-n}{N-1}$, when we have replacement then the hypergeometric becomes that of a binomial and $Var(Y) = npq$.
+This is a similar result for  the case of a  hypergeometric distribution. Where the variance of $Y = \sum_{i=1}^n Y_i$ is $Var(Y)=npq\frac{N-n}{N-1}$, when we change the sampling to use replacement then the distribution of $Y$ is no longer hypergeometric but will be that of a binomial and $Var(Y) = npq$.
+
+$$Var(Y_{Hyper.})< Var(Y_{Binomial})$$
 
 
 # Further investigation
@@ -199,4 +202,4 @@ You could look at the normality of the plots (why should they be normal anyway? 
 Download the files and place in correct directories.
 `r rmdfiles("lab7", "Intro2R")`
 
-Please note that when using `RMD` you must make sure that all code does not require user input such as `locator() ` or makes a new window `windows()`.
+Please note that when using `RMD` you must make sure that all code does not require user input such as `locator() ` or makes a new window `windows()`. To help you in this respect you can find **rmd ready** functions that will not need `locator()` ETC.
