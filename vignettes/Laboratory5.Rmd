@@ -1,0 +1,192 @@
+---
+title: "Laboratory5"
+output: 
+  prettydoc::html_pretty:
+    theme: cayman
+    highlight: github
+    math: katex
+    df_print: paged
+    toc: yes
+    toc_depth: 4
+             
+vignette: >
+  %\VignetteIndexEntry{Laboratory5}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "ws#>",
+  fig.align = "center"
+)
+
+# directory to Lab
+dirdl <- system.file("Lab5",package = "Intro2R")
+
+# create rmd link
+
+library(Intro2R)
+
+
+```
+
+
+# Introduction
+
+What is a frequency distribution? What is the random variable? How do we use basic simulations to create one of the 7 discrete distributions? What R skills are needed to effectively use disrete distributions?
+Lab 5 will get you up to speed on these issues.
+
+# R skills
+
+One of the big issues relates to the exact parameterization used in R as opposed to that which is defined in the book. In some cases the random variable itself will be different, in which case a different distribution is defined with the same name. 
+
+A basic statistical skill is to learn how to re-parameterize a problem to make it possible to use R distributional functions. Not all probability functions are written the same way -- though equivalent the respective parameters are defined differently (in some cases the random variable is defined differently). We could go ahead and make our own functions using the exact same probability function as our text book, but this will take time. It will be best to learn how to transform and/or re-parameterize.
+
+> To solve this problem you will need to look at the definition of the distribution as it is given in the book (MS, chapter 4) and then look up the form of the distribution in R's help files (e.g. `?dbinom`)
+
+Please see `r rmdfile("nbinom","nbinom.html", "Lab5")` for an example on how to use R when solving a negative binomial problem from the book which uses a different parameterization.
+
+
+# Functions used in R
+
+There are 7 discrete distributions that we will examine. Most will have 4 functions associated. By way of example, the four functions associated with the binomial are listed below:
+
+```{r,eval = FALSE}
+dbinom() # individual probabilites
+pbinom() # lower tail probability P(Y<=y) (inverse of qbinom)
+qbinom() # quantile for given lower tail prob (inverse of pbinom)
+rbinom() # random sample from a binomial distribution
+```
+
+
+The 7 discrete distributions that we will study are:
+
+```{r, eval = FALSE}
+dbinom(x,size = 1,prob) # Bernoulli
+dbinom(x, size = n, prob) # Binomial
+dnbinom(x,size,prob) # neg binomial
+dgeom(x,prob) # geometric
+dmultinom(x,prob) # multinomial, x and prob are vectors
+dpois(x,lambda) # poisson
+dhyper(x,m,n,k) # hypergeometric
+```
+
+
+# Calculation of probabilities for discrete distributions
+
+The main difficulties that students encounter relate to the endpoints of the random variable.
+
+Please take note of all aspects to the following problems.
+
+## Example 1
+
+If $Y\sim Bin(n=10, p=0.6)$,  find $P(6 \le Y \le 8)$
+
+```{r}
+p <- dbinom(0:10, size = 10, prob = 0.6)
+
+names(p)= 0:10
+ind <- which(0:10==6:8)
+
+coll <- rep(1,11)
+coll[ind]<-3
+
+barplot(p, col = coll, xlab = "Number of successes")
+```
+
+
+
+
+Solution: $P(6\le Y \le 8) = P(Y\le 8) - P(Y\le 5)=$ `pbinom(8,10,0.6)-pbinom(5,10,0.6)` = `r pbinom(8,10,0.6) - pbinom(5,10,0.6)`
+
+
+## Example 2
+
+Suppose we have $Y \sim nbinom(r=3, p=0.6)$ that is $Y$ is the number of trials until there are 3 successes.
+
+In R $X$ is the number of failures until the $rth$ success. $X=Y-1$
+
+Find $P(Y>7)  = P(X>6)$ 
+
+```{r}
+p <- dnbinom(0:15, 3,0.6) # 15 is picked as a convenient upper limit
+names(p) <- 0:15 # starts at 0 becasue X=Y-1
+
+ind <- which(0:15 > 6)
+coll <- rep(1,16)
+coll[ind] <- 3
+barplot(p, col = coll, xlab = "Number of failures till the 3rd success")
+```
+
+
+
+Solution: $P(X>6)=1-P(X\le 6)=$`1-pnbinom(6,3,0.6)`= `r 1-pnbinom(6,3,0.6)`
+
+## Example 3
+
+Suppose that $Y\sim Geom(p=0.6)$. Find the probability $P(Y < 4)$.
+$Y$ is the number of trials till the first success, in R $X$ is the number of failures till the first success, so $X=Y-1$.
+
+$P(Y<4)=P(X<3)$
+
+```{r}
+p <- dgeom(0:10,0.6) # 10 is picked as a convenient upper limit
+names(p) <- 0:10 # starts at 0 becasue X=Y-1
+
+ind <- which(0:10 <3)
+coll <- rep(1,11)
+coll[ind] <- 3
+barplot(p, col = coll, xlab = "Number of failures till the 1st success")
+```
+
+
+
+Solution: $P(X<3)=P(X\le 2)=$`pgeom(2,0.6)=``r pgeom(2,0.6)`
+
+## Example 4
+
+Suppose that $Y \sim multinom(n=20, p=c(0.3,0.2,0.1,0.4))$.  Find the probability $P(Y=c(4,5,4,7))$
+
+Solution: $P(Y=c(4,5,4,7))=$ `dmultinom(x=c(4,5,4,7), prob=c(0.3,0.2,0.1,0.4))=` `r dmultinom(x=c(4,5,4,7), prob=c(0.3,0.2,0.1,0.4))`
+
+
+## Example 5
+
+Suppose that $Y\sim Pois(\lambda = 4)$ find the probabilty $P(Y \ge 6)$
+
+```{r}
+p <- dpois(0:15, lambda=4)
+names(p) = 0:15
+
+ind= which(0:15 >= 6)
+coll = rep(1,16)
+coll[ind] <- 3
+barplot(p, col = coll,xlab = "Number of successes")
+```
+
+Solution: $P(Y \ge 6)=1-P(Y\le 5)=$ `1-ppois(5, 4)=` `r 1-ppois(5,4)`
+
+
+## Example 6
+
+Suppose that $Y\sim Hyper(N=30,r=20,n=10)$ find the probability $P(4 < Y < 9)$
+
+
+```{r}
+p<-dhyper(0:10, m=20, n=30-20, k =10)
+names(p) <- 0:10
+
+ind <- which(0:10 > 4 & 0:10 < 9)
+coll <- rep(1,11)
+coll[ind]<-3
+barplot(p, col = coll, xlab = "Number of white balls")
+```
+
+
+In R $X$ is the number of white balls (m) drawn from an urn without replacement.
+
+Solution:
+
+$P(4<Y<9)=P(4<X<9)=P(X\le 8)-P(X\le 4)=$ `phyper(q=8,m=20,n = 30-20,k=10)-phyper(q=4,m=20,n=30-20, k=10)=` `r phyper(q=8,m=20,n = 30-20,k=10)-phyper(q=4,m=20,n=30-20, k=10)`  

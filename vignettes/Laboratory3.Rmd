@@ -507,3 +507,45 @@ There are 4 basic blocks of output above.
   1. This means that we can say that for every one unit increase in LENGTH the average WEIGHT will increase by 35.816
   2. $R^2 = 0.43$ this means that 43% of the variability in WEIGHT is explained by the model through the LENGTH ($0\le R^2\le 1$ ). This is not a great fit and will mean that prediction interval widths will be large.
   3. The P value is $2\times 10^{-16}$, this gives strong evidence against $H_0:\beta_1=0$. We conclude that WEIGHT is related to LENGTH and LENGTH is needed in the model.
+  
+  
+  
+# Predictions
+
+The theory of linear regression enables us to make point estimates for new average $y$ values given an $x_p$ value (this can be written as $\hat{E}(Y|x_p)$ or just $\hat{Y}|x_p$. We call it $x_p$ because we predict for a given $x$.
+
+In R there are a number of functions we can use.
+
+The main one is `predict()` -- to see how ths works please use `?predict`. We will learn with some examples
+
+For the ddt data lets make 10 predictions of WEIGHT when $x_p = 30:39$
+
+```{r}
+
+predict(ylm, data.frame(LENGTH=30:39))
+
+```
+
+We should try the same for the quadratic model
+
+```{r}
+
+predict(ylm2, data.frame( LENGTH = 30:39))
+```
+
+
+
+Now lets try the Non-linear model
+
+```{r}
+predict(ylm3, data.frame(LENGTH = 30:39))
+```
+
+# Shiny server
+
+This is a big topic but we can get into the main useage of this idea fairly quickly.
+
+The main idea here is that we would like to dynamically change plots, tables and other R created output based on the various settings of widgets.
+
+
+

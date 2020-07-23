@@ -1,0 +1,202 @@
+---
+title: "Laboratory7"
+output: 
+  prettydoc::html_pretty:
+    theme: cayman
+    highlight: github
+    math: katex
+    df_print: paged
+    toc: yes
+    toc_depth: 4
+             
+vignette: >
+  %\VignetteIndexEntry{Laboratory7}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "ws#>",
+  fig.align = "center"
+)
+
+# directory to Lab
+dirdl <- system.file("Lab7",package = "Intro2R")
+
+# create rmd link
+
+library(Intro2R)
+
+
+```
+
+
+# Introduction
+
+This lab is about *sampling distributions* made from the Normal distribution. Much of classical statistics is constructed upon the basic ideas presented in this lab. 
+
+What are *sampling distributions* and *sampling statistics*? The idea is fairly simple. The sampling distribution is the distribution of the statistic (a statistic is a function of the sample data) under repeated sampling from the population. 
+
+We will assume that the population data are distributed Normally
+
+$$Y_i \stackrel{iid}{\sim} N(\mu, \sigma^2)$$
+
+One we have selected a sample of size $n$ from the population we calculate the statistic of interest ($T,\chi^2, Z$ etc).
+
+For example 
+
+$$ T = \frac{\bar{Y}-\mu}{S/\sqrt{n}} $$
+For each sample taken from the population there will be different $\bar{Y}$ and $S$ and hence $T$ will change from sample to sample. If we made a rel. frequency histogram of all these $T$ values we would have a distributional plot graphically indicating the sampling distribution.
+
+The distribution in this case is very Normal looking, except there are fatter tails when $\nu$ is small (see the blue verses the green lines).
+
+We write
+
+$$T\sim t(\nu)$$
+where $\nu$ is the parameter (degrees of freedom = n-1) of the distribution.
+
+You can see that the $T$ statistic looks very much like a $Z$ statistic
+
+$$Z= \frac{\bar{Y}-\mu}{\sigma/\sqrt{n}}$$
+this has a Normal distribution: 
+
+$$Z\sim N(0,1)$$
+Notice the parameters $\mu_Z=0$ and $\sigma_Z=1$. The $T$ distribution has a mean of 0 and will have a standard deviation of 1 when $\nu \rightarrow \infty$ otherwise bigger than 1.
+
+In fact for $\nu > 2$ the variance of $T$ is $\frac{\nu}{\nu-2}$ and $\infty$ when $1<\nu\le 2$
+
+For more information see [the t-distribution](https://en.wikipedia.org/wiki/Student%27s_t-distribution)
+
+```{r}
+library(ggplot2)
+g <- ggplot(NULL, aes(x=c(-4,4))) + stat_function(geom="line",fun = "dt", args=list(df=9), color = "blue") 
+g<-g+ stat_function(geom="line",fun = "dt", args=list(df=99), color = "green") + xlab("T") + ylab("Density")
+g
+```
+
+
+The lab will show how we can also form sampling distributions of statistics using two samples. One notable statistic is called the $F$ statistic.
+
+
+# Objectives
+
+
+>
+  1.	Create a sample from one population.
+  2.	Create statistics.
+  3.	Create sampling distributions and appropriate graphs.
+  4.	Sample from two different populations and create sampling distributions for statistics made from both samples.
+  5.	Add data and its documentation to your R package
+  
+
+# R skills: The `sample()` function
+
+The lab will take you in various directions to help you understand the function. It has many useful applications.
+
+One important idea is the concept of replacement sampling or non-replacement sampling.
+
+In many sampling situations done in practice we do not replace our experimental objects after measuring and then recording some characteristics (values of variables). This is often done in the context of a very large population ($n_{sample}<<N_{pop}$) so that the distribution of the sampling statistic whether created using *non - replacement* or using *replacement* is unaffected. The $P(Y_i|Y_{i-1})\approx P(Y_i)$ i.e we can assume approximate independence of events in both cases.
+
+
+## With replacement
+
+If we wish to create samples from a population using replacement then we will need to use the options in the argument of the function
+
+
+```{r}
+pop <- 1:100
+
+set.seed(20) # used to make the same sample
+sample(x = pop,size = 10,replace = TRUE,prob = rep(1/100,100))
+
+```
+
+
+Here are a couple of paragraphs from the help file concerning the options `replace` and `prob`
+
+>
+  1. The optional prob argument can be used to give a vector of weights for obtaining the elements of the vector being sampled. They need not sum to one, but they should be non-negative and not all zero. If replace is true, Walker's alias method (Ripley, 1987) is used when there are more than 200 reasonably probable values: this gives results incompatible with those from R < 2.2.0.
+  2. If replace is false, these probabilities are applied sequentially, that is the probability of choosing the next item is proportional to the weights amongst the remaining items. The number of nonzero weights must be at least size in this case.
+  
+Note that `prob` is optional. If you leave it off and `replace = TRUE` then a bootstrap sample is made -- ie prob weights are all equal. If `replace = FALSE` and `prob` is left off then progressively each datum will be sampled with equal probability amongst the remaing values.
+
+## Demonstration of sampling
+
+
+The code below will demonstrate the following:
+
+>
+  1. How to populate a matrix with simulations `sample()`
+  2. How to create sample statistics using the function `apply()` -- please see [the apply functions](https://www.guru99.com/r-apply-sapply-tapply.html)
+  3. How to create summary plots and tables `hist()` and `summary()`
+  4. The change in accuracy with and without replacement when the population size and sample size are comparable and then when the population size is much bigger than the sample size ($N>>n$) 
+
+```{r}
+iter = 10000 # nu of iterations
+n = 10 # sample size
+matf <- matrix(NA, nr=n, nc = iter) # matrix to hold samples (no replacement)
+matt <- matf # second matrix same size (With replacement)
+matf2 <- matf # no replacement second pop
+matt2 <- matf # replacement secod pop
+pop = 1:1000  # first pop to sample from (large pop)
+pop2 = 1:12 # second pop to sample from (small pop)
+
+for(i in 1:iter){ # for loop to iterate
+  matf[,i] <- sample(x=pop,size = n, replace = FALSE) # fill columns
+  matt[,i] <- sample(x=pop,size=n,replace=TRUE)
+  matf2[,i] <- sample(x=pop2, size = n, replace = FALSE)
+  matt2[,i] <- sample(x=pop2, size = n, replace = TRUE)
+ }
+mnf <- apply(matf, 2, mean) # apply "mean" to columns (2) of the matf matrix
+mnt <- apply(matt, 2, mean)
+
+mnf2 <- apply(matf2,2,mean)
+mnt2 <- apply(matt2, 2, mean)
+
+stdf <- summary(mnf)
+stdt <- summary(mnt)
+
+stdf2 <- summary(mnf2)
+stdt2 <- summary(mnt2)
+
+layout(matrix(c(1,2,3,4), nrow=2,ncol = 2, byrow=TRUE))
+hist(mnf,main = "Large pop.", xlab = "no replacement, sample mean")
+hist(mnt,main = "Large pop.", xlab = "replace, sample mean")
+
+
+hist(mnf2,xlim = c(0,10),main = "Small pop.", xlab = "no replacement, sample mean")
+hist(mnt2,xlim = c(0,10),main = "Small pop.", xlab = "replace, sample mean")
+
+
+```
+
+## Conclusions
+
+When sampling as shown there is little difference in results between replacement and non replacement when the population is large -- look at the sampling distributions of the mean. BUT -- and here is the rub! When the population and sample size are comparable `n/N=` `r round(n/length(pop2),4)` the distributions of the sample means  are very different. Comparing  *NO replacement* with *replacement* the sample means are on average approximately the same  and the range of the means is smaller. The standard deviation of the sample means is significantly smaller. 
+
+```{r}
+stdf2 # Summary of sample means No replacement
+sd(mnf2) # sd 
+IQR(mnf2)/sd(mnf2) # test for Normality
+#---------------------------
+stdt2 # Summary of sample means replacement
+sd(mnt2)
+IQR(mnt2)/sd(mnt2)
+```
+
+
+This is a similar result for  the case of a  hypergeometric distribution. Where the variance of $Y = \sum_{i=1}^n Y_i$ is $Var(Y)=npq\frac{N-n}{N-1}$, when we have replacement then the hypergeometric becomes that of a binomial and $Var(Y) = npq$.
+
+
+# Further investigation
+
+You could look at the normality of the plots (why should they be normal anyway? See the central limit theorem) -- especially comparing the replacement/no replacement differences when sample and populations are comparable in size ($0.5< n/N <1$). Aslo you could make a fuction that would carry the comparison out.
+
+# Now complete the lab
+
+Download the files and place in correct directories.
+`r rmdfiles("lab7", "Intro2R")`
+
+Please note that when using `RMD` you must make sure that all code does not require user input such as `locator() ` or makes a new window `windows()`.

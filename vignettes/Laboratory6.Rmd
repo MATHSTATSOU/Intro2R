@@ -1,0 +1,397 @@
+---
+title: "Laboratory6"
+output: 
+  prettydoc::html_pretty:
+    theme: cayman
+    highlight: github
+    math: katex
+    df_print: paged
+    toc: yes
+    toc_depth: 4
+             
+vignette: >
+  %\VignetteIndexEntry{Laboratory6}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "ws#>",
+  fig.align = "center"
+)
+
+# directory to Lab
+dirdl <- system.file("Lab6",package = "Intro2R")
+
+# create rmd link
+
+library(Intro2R)
+
+
+```
+
+
+# Introduction
+
+This lab covers much to do with the practicalities of continuous random variables and their distributions. How do you calculate probabilities etc.
+
+However, we shall also look at some of the items covered in the book that you might miss as inconsequential. 
+
+Because densities have certain properties,
+
+>
+  1. $f(y)\ge 0$
+  2. $\int_{-\infty}^{+\infty}f(y)dy =1$
+  3. $P(a< Y<b)=\int_{a}^{b}f(y)dy = F(b)-F(a)$
+
+a number of implied and consequential functions result.
+
+## Example 
+
+The gamma function $\Gamma(t)$,  is defined from the Gamma density, $Y\sim Gamma(\alpha,  \beta)$.
+
+$$\Gamma(t) = \int_0^{\infty}y^{t-1}e^{-y}dy$$
+It so happens that this function has many important applications and properties not least of which is that it generalizes the notion of a factorial.
+
+If $t$ is a positive integer then:
+
+$$\Gamma(t) = (t-1)!$$
+
+## R's gamma function
+
+
+You can calculate the gamma for any $t\in \Re^{+}$
+
+```{r}
+gamma(5.678)
+gamma(5) == factorial(4)
+```
+
+
+# Objectives
+
+In this lab you will learn how to:
+
+> 
+  1.    Plot densities.
+  2.    Make areas under the curve.
+  3.    Calculate probabilities.
+  4.    Create a function that calculates and displays areas 
+  5.    Add the above function to a package
+  
+
+You can learn more about R in relation to densities and plots here <https://ademos.people.uic.edu/index.html>
+  
+  
+# Using and understanding R density functions
+
+There are 7 continuous distributions we will need to understand and use well.
+
+For each of these distributions there are 4 important functions. Below are the four in the case of a Normal distribution
+
+```{r, eval = FALSE}
+dnorm() # make a density plot (the height of the density f(x))
+pnorm() # the lower tail probability P(X<=x)
+qnorm() # The x that corresponds to a lower tail area
+rnorm() # A random sample from the distribution
+```
+
+
+The 7 densities for the 7 distributions take the following form
+
+```{r, eval = FALSE}
+dunif()
+dnorm()
+dgamma()
+dchisq()
+dexp()
+dweibull()
+dbeta()
+
+```
+
+# Solving statistical and probabilistic problems
+
+The difficulties students face with the 7 continuous distribtions and their associated densities relates to:
+
+
+>
+  1. Discovery of the correct distribution for a particular problem.
+  2. Choosing which of the four functions to use:
+    + d-stem
+    + p-stem
+    + q-stem
+    + r-stem
+  3. Re-parameterizing in order to use the software
+  
+  
+  
+The last difficulty comes about because parameterization is not unique. This is the case for discrete distributions also. You learn a particular formualic system (density and 2 moments each expressed in terms of the parameters) for say the `Weibull` and then discover your favorite statistical workspace uses a different formula. 
+
+## MS Weibull
+
+$$ f(y) = \frac{\alpha}{\beta}y^{\alpha-1}e^{-y^{\alpha}/\beta}\; 0\le y < \infty;\; \alpha>0;\; \beta>0$$
+
+## R Weibull
+
+$$ f(x) = \frac{a}{b}\left(\frac{x}{b}\right)^{a-1}e^{-(\frac{x}{b})^a}\; 0\le X < \infty ; a>0; b>0$$
+
+You will need to take the MS formulation and transform to R -- that is use the following transformation
+
+$$ a= \alpha $$
+$$ b^a = \beta $$
+So that if you know $\alpha$ and $\beta$ you can find $a$ and $b$ and hence use R.
+These problems will not go away -- you must get used to adapting to the software you have regardless of the theoretical formulation you are used to.
+
+
+# Examples
+
+## Example 1: The uniform density
+
+Suppose $Y \sim Unif(2,6)$ find the probability $P(Y > 4)$.
+
+### Reparameterize
+
+None 
+
+### Plot $X$ in R
+
+```{r}
+curve(dunif(x, 2,6), xlim=c(2,6))
+
+xcurve <- seq(4,6, length = 1000)
+ycurve <- dunif(xcurve, 2, 6)
+polygon(x = c(4,xcurve,6), y=c(0,ycurve,0), col = "green")
+
+```
+
+Solution:
+$P(Y>4)=1-P(Y\le 4)=$ `1-punif(4,2,6)=`  `r 1-punif(4,2,6)`
+
+## Example 2: The normal density
+
+Suppose $Y\sim N(\mu = 10, \sigma = 5)$ find the probability $P(3 \le Y < 8)$ 
+
+
+### Reparameterize
+
+None 
+
+### Plot $X$ in R
+
+```{r}
+library(ggplot2)
+
+normargs <- list(mean = 10, sd = 5)
+
+n <- ggplot(NULL, aes(x = c(-5,25))) + 
+  stat_function(fun = dnorm, args = normargs , geom = "area", col = "black") 
+  
+
+n <- n + stat_function(fun = dnorm, args = normargs, geom = "area", fill = "green", alpha = 2,xlim = c(3,8)) 
+
+n <- n + xlab("X") + ylab("Density")
+n
+```
+
+
+Solution:
+
+$P(3\le Y < 8) = P(Y\le 8)-P(Y\le 3)=$ `pnorm(8,10,5)-pnorm(3,10,5)=` `r pnorm(8,10,5)-pnorm(3,10,5)`
+
+## Example 3: The gamma density
+
+
+Suppose that $Y\sim Gamma(\alpha =4, \beta = 4)$ find the probability
+$P(Y\le 6)$
+
+
+### Reparameterize
+
+`shape` = $\alpha$
+
+`scale` = $\beta$
+
+### Plot $X$ in R
+
+```{r}
+gamargs = list(shape=4, scale=4)
+g <- ggplot(NULL, aes(x = c(6,20))) + 
+  stat_function(fun = dgamma, args = gamargs , geom = "area", col = "black") 
+  
+
+g <- g + stat_function(fun = dgamma, args = gamargs, geom = "area", fill = "green", alpha = 2,xlim = c(0,6)) 
+
+g <- g + xlab("X") + ylab("Density")
+g
+```
+
+
+
+Solution:
+$P(Y\le 6)=$`pgamma(6,shape = 4,scale = 4)=` `r pgamma(6,shape = 4,scale = 4)`
+
+## Example 4: The Chi-square density
+
+Suppose $Y\sim Chisq(\nu=5)$ find the probability $P(Y > 6)$
+
+### Reparameterize
+
+$df = \nu$
+
+### Plot $X$ in R
+
+```{r}
+chiargs = list(df = 5)
+ch <- ggplot(NULL, aes(x = c(6,15))) + 
+  stat_function(fun = dchisq, args = chiargs , geom = "area", col = "black") 
+  
+
+ch <- ch + stat_function(fun = dchisq, args = chiargs, geom = "area", fill = "green", alpha = 2,xlim = c(0,6)) 
+
+ch <- ch + xlab("X") + ylab("Density")
+ch
+
+```
+
+
+Solution:
+$P(Y>6)=1-P(Y\le 6)=$ `1-pchisq(6,df=5)=` `r 1-pchisq(6,5)`
+
+
+## Example 5: The exponential density
+
+Suppose $Y \sim Exp(\beta = 4)$ find the probability $P(3\le Y\le 6)$
+
+### Reparameterize
+
+$rate = 1/\beta$
+
+### Now plot using $X$ in R
+
+```{r}
+expargs = list(rate = 1/4)
+e <- ggplot(NULL, aes(x = c(0,10))) + 
+  stat_function(fun = dexp, args = expargs , geom = "area", col = "black") 
+  
+
+e <- e + stat_function(fun = dexp, args = expargs, geom = "area", fill = "green", alpha = 2,xlim = c(3,6)) 
+
+e <- e + xlab("X") + ylab("Density")
+e
+```
+
+Solution:
+$P(3\le Y\le 6)=P(Y\le 6)-P(Y\le 3)=$ `pexp(6,1/4)-pexp(3,1/4)=` `r pexp(6,1/4)-pexp(3,1/4)`
+
+## Example 6: The Weibull density
+
+Please note that the parameters are more complex here -- see the discussion in the sections above. You must look at the densities in MS and R.
+
+Suppose $Y\sim Weibull(\alpha = 3, \beta =4)$ find the probability $P(Y\le 0.5)$
+
+### Reparameterize
+
+$shape = \alpha$
+
+$scale = \beta^{1/a}$
+
+### Now plot using $X$ in R
+
+```{r}
+weargs = list(shape = 3,scale =(4)^(1/3) )
+w <- ggplot(NULL, aes(x = c(0.5,4))) + 
+  stat_function(fun = dweibull, args = weargs , geom = "area", col = "black") 
+  
+
+w <- w + stat_function(fun = dweibull, args = weargs, geom = "area", fill = "green", alpha = 2,xlim = c(0,0.5)) 
+
+w <- w + xlab("X") + ylab("Density")
+w
+```
+
+
+Solution:
+$P(Y\le 0.5)=$ `pweibull(0.5,shape = 3, scale=(4)^(1/3))=` `r pweibull(0.5,shape = 3, scale=(4)^(1/3))`
+
+
+## Example 7: The Beta density
+
+Suppose that $Y\sim Beta(\alpha = 3,\beta = 5)$ find the probability $P(0.2\le Y\le 0.5)$
+
+### Reparameterize
+
+`shape1=`$\alpha$
+
+`shape2` = $\beta$
+
+### Now plot using $X$ in R
+
+```{r}
+bargs <- list(shape1 = 3, shape2 = 5 )
+
+b <- ggplot(NULL, aes(x = c(0,1))) + 
+  stat_function(fun = dbeta, args = bargs , geom = "area", col = "black") 
+  
+
+b <- b + stat_function(fun = dbeta, args = bargs, geom = "area", fill = "green", alpha = 2,xlim = c(0.2,0.5)) 
+
+b <- b + xlab("X") + ylab("Density")
+b
+
+```
+
+Solution:
+
+$P(0.2\le Y\le 0.5)=P(Y\le 0.5)-P(Y\le0.2)=$`pbeta(0.5,3,5)-pbeta(0.2,3,5)=` `r pbeta(0.5,3,5)-pbeta(0.2,3,5)`
+
+
+# Functions
+
+After reviewing examples 1-7 you can see that a lot of the code was repeated and that only a few things changed from example to example (the unif was a little different because I used base R). Can we make a function to expedite the calculation and save time and space?
+
+I will give you edition 1 of the function and then you can improve it.
+
+```{r}
+ggareai2r <- function(gargs,xrange,xarea,dfun){
+ 
+
+g <- ggplot(NULL, aes(x = xrange)) + 
+  stat_function(fun = dfun, args = gargs , geom = "area", col = "black") 
+  
+
+g <- g + stat_function(fun = dfun, args = gargs, geom = "area", fill = "green", alpha = 2,xlim = xarea) 
+
+g <- g + xlab("X") + ylab("Density")
+
+print(g)
+ 
+}
+```
+
+## Try it out
+
+Lets make a Beta density $Beta(7,9)$ with area over the interval `(0.4,0.8)`.
+
+```{r}
+ggareai2r(gargs=list(shape1= 7,shape2=9),xrange = c(0,1),xarea=c(0.4,0.8),dfun = "dbeta")
+```
+
+
+## Uniform density
+
+Say $Y\sim Unif(3,10)$ and we want the are above `(4,8)`
+
+```{r}
+ggareai2r(gargs=list(min = 3, max = 10),xrange = c(3,10), xarea = c(4,8),dfun = "dunif")
+```
+
+The rest of the lab involves other important tasks and activities one of which pertains to the addition of  a function to an R package.
+
+# Finally
+
+Please donload and install the following into their appropriate directories `r rmdfiles("Lab6","Intro2R")`
+
+Now you can start on the tasks as given in the word file. 

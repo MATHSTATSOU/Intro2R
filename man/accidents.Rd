@@ -5,10 +5,10 @@
 \alias{accidents}
 \title{Accidents data set.}
 \format{
-A data frame with 15 rows and 2 variables:
+A data frame with 8 rows and 2 variables:
 \describe{
-  \item{HOUR}{Hoursin miles from fire station}
-  \item{ACCIDENTS}{Number of dollars}
+  \item{HOUR}{Hours from fire station}
+  \item{ACCIDENTS}{Number of accidents}
 }
 }
 \source{
