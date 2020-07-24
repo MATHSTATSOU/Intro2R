@@ -36,3 +36,41 @@ library(Intro2R)
 # Introduction
 
 This lab is about sampling distributions and the Central Limit Theorem or CLT for short.
+
+The CLT is a very important distributional result which helps explain why it is that the Normal distribution is so important and pervasive. 
+
+
+## The central limit theorem
+
+>
+  If a random sample $Y_1,Y_2, Y_3, \ldots, Y_n$ is drawn from a population with finite mean $\mu$ and variance $\sigma^2$, then, when $n$ is large, the sampling distribution of the sample mean $\bar{Y}$ can be approximated by a normal density function.
+  
+  
+  
+ The proof for this can be created by using moment generating functions. Essentially we transform the $\bar{Y}$ to $Z$ and then show that the MGF for Z is that of a Normal distribution as $n\rightarrow \infty$.
+ 
+ 
+## $\bar{Y}$ and the sum
+
+Since the CLT applies to $\bar{Y}$ it also applies to $T = \sum_{i=1}^{n}Y_i=n\bar{Y}$. So that $T\stackrel{n->\infty}{\sim} N$
+ 
+# Lab objectives
+
+This lab will teach and examine some basic algebraic skills related to distributional theory. Make sure you master the techniques. In addition there are some computing skills:
+
+>
+  1.	Sample from any distribution using r ----(), example rbinom(), rpois(), runif(), etc (see ?distributions in R)
+  2.	How to create a statistic, usually the sum or the mean.
+  3.	How to store the statistic.
+  4.	How to repeat the procedure for a designated number of iterations.
+  5.	When finished learn how to create a histogram of the statistic with other graphs.
+
+
+
+# Finally
+
+Please start on the lab by downloading the following files and placing in the correct directories.
+
+ `r rmdfiles("Lab8", "Intro2R")`
+  
+
