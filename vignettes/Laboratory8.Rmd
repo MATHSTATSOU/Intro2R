@@ -66,6 +66,44 @@ This lab will teach and examine some basic algebraic skills related to distribut
   5.	When finished learn how to create a histogram of the statistic with other graphs.
 
 
+## Algebraic skills
+
+Suppose we have $Y_i\sim D( \ldots)$ where the population has a mean $\mu$ and variance $\sigma^2$. Also we will assume that the random variables $Y_i\stackrel{iid}{\sim}D$
+
+
+Then the CLT says that provided n is sufficiently large $\bar{Y}\sim N(\mu_{\bar{Y}}, \sigma_{\bar{Y}}^2)$
+
+The question is -- what are the values of $\bar{Y}$ and $\sigma_{\bar{Y}}^2$
+
+### The mean of $\bar{Y}$, $\mu_{\bar{Y}}$
+
+The mean of a distribution is called the expected value. We need $E(\bar{Y})$
+
+$$ E(\bar{Y})=E(Y)$$
+
+### The variance of $\bar{Y}$, $\sigma_{\bar{Y}}^2$
+
+The variance of a distribution is defined as $V(Y)=E((Y-\mu_Y)^2)$. Therefore, if $L = aY +b$, then $V(L)= a^2V(Y)$.
+
+So that 
+
+$$V(\bar{Y})=V\left(\frac{\sum_i Y_i}{n}\right) = \frac{\sigma_{Y}^2}{n}$$
+
+Notice that the variance of $\bar{Y}$ is smaller than the variance of $Y$.
+
+## Conclusion
+
+This means that  regardless of the distribution that $Y$ takes
+
+$$\bar{Y}\stackrel{n\rightarrow \infty}{\sim} N(\mu_Y, \frac{\sigma_Y^2}{n})$$
+
+# Example
+
+Take an example. Suppose $Y_i\stackrel{iid}{\sim} Bern(p)$ and we wish to find the distribution of $\bar{Y}$.
+
+$\mu_y = p$ and $\sigma_Y^2 = pq$, so 
+
+$$\bar{Y}\stackrel{n->\infty}{\sim} N(p, \frac{pq}{n})$$
 
 # Finally
 
