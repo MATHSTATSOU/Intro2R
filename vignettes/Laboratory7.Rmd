@@ -71,7 +71,7 @@ For more information see [the t-distribution](https://en.wikipedia.org/wiki/Stud
 
 ```{r}
 library(ggplot2)
-g <- ggplot(NULL, aes(x=c(-4,4))) + stat_function(geom="line",fun = "dt", args=list(df=9), color = "blue") 
+g <- ggplot(data.frame(x=c(-4,4)), aes(x)) + stat_function(geom="line",fun = "dt", args=list(df=9), color = "blue") 
 g<-g+ stat_function(geom="line",fun = "dt", args=list(df=99), color = "green") + xlab("T") + ylab("Density")
 g
 ```
