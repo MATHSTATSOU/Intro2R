@@ -1,8 +1,8 @@
 #' @title  T simulation
 #'
-#' @description This carries out a simulation from a sample Normal
+#' @description This carries out a simulation from a  Normal
 #'
-#' @details This demonstrates what a sampling distribution is and gives some details of how an r siulation can be made. The function is RMD ready.
+#' @details This demonstrates what a sampling distribution is and gives some details of how an r simulation can be made. The function is RMD ready.
 #'
 #' @param n1 Sample size
 #' @param sigma1 Population standard deviation
@@ -12,13 +12,15 @@
 #' @param x The x co-ord of the T annotation formula
 #' @param y The y co-ord of the same
 #' @param ... More parameters to send to the histogram
+#' @importFrom graphics curve  hist legend lines
+#' @importFrom stats density  dt  rnorm sd
 #'
 #' @return A plot and list of summary stats
 #' @export
 #'
 #' @examples
 #' myTsim()
-myTsim<-function(n1=10,sigma1=3,mean1=5,iter=1000,ymax=0.1,x=2,y=0.3,...){    # adjust ymax to make graph fit
+myTsim<-function(n1=10,sigma1=3,mean1=5,iter=1000,ymax=0.4,x=2,y=0.3,...){    # adjust ymax to make graph fit
   y1=rnorm(n1*iter,mean=mean1,sd=sigma1)# generate iter samples of size n1
 
   data1.mat=matrix(y1,nrow=n1,ncol=iter,byrow=TRUE) # Each column is a sample size n1
