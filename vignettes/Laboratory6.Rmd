@@ -186,7 +186,7 @@ library(ggplot2)
 
 normargs <- list(mean = 10, sd = 5)
 
-n <- ggplot(NULL, aes(x = c(-5,25))) + 
+n <- ggplot(data.frame(x = c(-5,25)), aes(x)) + 
   stat_function(fun = dnorm, args = normargs , geom = "area", col = "black") 
   
 
@@ -218,7 +218,7 @@ $P(Y\le 6)$
 
 ```{r}
 gamargs = list(shape=4, scale=4)
-g <- ggplot(NULL, aes(x = c(6,20))) + 
+g <- ggplot(data.frame(x=c(6,20)), aes(x)) + 
   stat_function(fun = dgamma, args = gamargs , geom = "area", col = "black") 
   
 
@@ -245,7 +245,7 @@ $df = \nu$
 
 ```{r}
 chiargs = list(df = 5)
-ch <- ggplot(NULL, aes(x = c(6,15))) + 
+ch <- ggplot(data.frame(x = c(6,15)), aes(x)) + 
   stat_function(fun = dchisq, args = chiargs , geom = "area", col = "black") 
   
 
@@ -273,7 +273,7 @@ $rate = 1/\beta$
 
 ```{r}
 expargs = list(rate = 1/4)
-e <- ggplot(NULL, aes(x = c(0,10))) + 
+e <- ggplot(data.frame(x = c(0,10)), aes(x)) + 
   stat_function(fun = dexp, args = expargs , geom = "area", col = "black") 
   
 
@@ -302,7 +302,7 @@ $scale = \beta^{1/a}$
 
 ```{r}
 weargs = list(shape = 3,scale =(4)^(1/3) )
-w <- ggplot(NULL, aes(x = c(0.5,4))) + 
+w <- ggplot(data.frame(x = c(0.5,4)), aes(x)) + 
   stat_function(fun = dweibull, args = weargs , geom = "area", col = "black") 
   
 
@@ -332,7 +332,7 @@ Suppose that $Y\sim Beta(\alpha = 3,\beta = 5)$ find the probability $P(0.2\le Y
 ```{r}
 bargs <- list(shape1 = 3, shape2 = 5 )
 
-b <- ggplot(NULL, aes(x = c(0,1))) + 
+b <- ggplot(data.frame(x = c(0,1)), aes(x )) + 
   stat_function(fun = dbeta, args = bargs , geom = "area", col = "black") 
   
 
@@ -358,7 +358,7 @@ I will give you edition 1 of the function and then you can improve it.
 ggareai2r <- function(gargs,xrange,xarea,dfun){
  
 
-g <- ggplot(NULL, aes(x = xrange)) + 
+g <- ggplot(data.frame(x = xrange), aes(x)) + 
   stat_function(fun = dfun, args = gargs , geom = "area", col = "black") 
   
 
