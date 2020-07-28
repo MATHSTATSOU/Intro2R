@@ -21,7 +21,8 @@ Imports:
     stringr,
     purrr,
     s20x,
-    gpairs
+    gpairs,
+    boot
 Suggests: 
     knitr,
     rmarkdown
