@@ -1,0 +1,182 @@
+---
+title: "Laboratory9"
+output: 
+  prettydoc::html_pretty:
+    theme: cayman
+    highlight: github
+    math: katex
+    df_print: paged
+    toc: yes
+    toc_depth: 4
+             
+vignette: >
+  %\VignetteIndexEntry{Laboratory9}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "ws#>",
+  fig.align = "center"
+)
+
+# directory to Lab
+dirdl <- system.file("Lab9",package = "Intro2R")
+
+# create rmd link
+
+library(Intro2R)
+
+
+```
+
+
+# Introduction
+
+We have already learnt the basics of sampling from a population using the `rstem` functions.
+
+These are good for verifying, reproducing and sometimes investigating ideas where theory is intractable.
+
+In practice, however, we often cannot assume a distribution for the population and must use distributional information latent within the sample. This information can be extracted using the `bootstrap`.
+
+There are a number of very cool packages on `CRAN` that you can use to perform basic bootstrap as `EFRON` designed. Plus there are many more algorithms which implement different sampling schemes.
+
+We will look at the R package `boot` and in the Lab we will design our own bootstrap functions.
+
+# boot `install.packages("boot")`
+
+In classical statistics we are confronted with the need to make estimates of parameters. These estimates come in two forms:-
+
+>
+  1. Point $\hat{\theta}$
+  2. Interval $(L,U)$
+
+Generally we make our point estimate directly from the sample and the interval estimate we can make in many ways. If we implement analytic confidence intervals (using a formula such as $\bar{Y} \pm t_{\alpha/2}s/\sqrt{n}$) then we use the originating sample. We can however use `bootstrap` methods which invoke resampling techniques.
+
+![](bootstrap.gif){ width=70% }
+
+
+## Example
+
+Suppose we wish to make bootstrap interval estimates of the mean `LENGTH` by each of the three fish, Catfish, Bass, and Buffalo fish in the Tennessee river
+
+```{r}
+data(ddt)
+library(ggplot2)
+g <- ggplot(ddt, aes(x = SPECIES, y = LENGTH, fill = SPECIES)) + geom_boxplot()
+g
+```
+
+
+To resample the data set we need to make a function that is suitable for the R package `boot`.
+
+The function must have at least two arguments:
+
+>
+  1. data
+  2. indices
+  
+  
+The data is typically a data frame which will be given as the first argument of the `boot` function, and the indices will be supplied by the `boot` function.
+
+Notice that you need to choose appropriate statistics. If you need to estimate the mean then the stat will be the sample mean.
+
+The function must return a vector. Each will be referenced in the output by an index. For example the catfish will be referenced by a `1` and the Buffalo fish by a `3`.
+
+
+```{r}
+library(boot)
+myfun <- function(data,indices){
+  d<-data[indices,]
+  dbarcat <- mean(with(d, d[SPECIES == "CCATFISH","LENGTH"]))
+  dbarbas <- mean(with(d, d[SPECIES == "LMBASS", "LENGTH"]))
+  dbarbuf <- mean(with(d, d[SPECIES == "SMBUFFALO", "LENGTH"]))
+  return(c(dbarcat = dbarcat, dbarbas = dbarbas, dbarbuf = dbarbuf))
+}
+
+
+
+```
+
+Notice that the boot function has three arguments (you can use more -- see `?boot`)
+
+>
+  1. data
+  2. the user defined function as above
+  3. the number of iterations, `R`
+  
+
+```{r}
+out <-boot(ddt,myfun, R = 1000)
+```
+
+
+The output can then be used to calculate confidence intervals by using the `bootci()` function. Notice that the type of interval is `perc=percentage`. This will put $\alpha/2*100/1$% of the distribution in each of the tails.
+
+```{r}
+outci <- boot.ci(out, conf = 0.95, index = 1,type = "perc")
+outci
+```
+
+### List output
+
+There is a lot more in the output than you might think.
+
+```{r}
+names(out)
+```
+
+Also from the `boot.ci` function
+
+```{r}
+names(outci)
+```
+
+
+This information can be used for making graphical output.
+
+### Plots
+
+To see the simulation output we can use the plot function. Note that since the `class` of `out` is `boot` there is the possibility for the `boot` programmer to make an `S3` method. In fact there is a plot method. When the function `plot` inspects `out` it will see that its class is `boot` and then look for a method `plot.boot` if it finds it then it will call it.
+
+The plot uses the matrix $t$ which contains the simulation.
+
+```{r}
+methods(class = "boot")
+plot(out, index = 1) # this will call plot.boot
+
+```
+
+
+To view the confdence interval we can use the following
+
+```{r}
+ci = outci$percent[1,c(4,5)]
+ci
+```
+
+```{r}
+hist(out$t[,1], 
+     main = "CCATFISH", 
+     col = "green", 
+     prob = TRUE,
+     xlab = "sample mean")
+
+lines(density(out$t[,1]), 
+      lwd = 2,
+      col = "red")
+
+abline(v = ci, 
+       col = "Blue", 
+       lwd = 3)
+```
+
+# Finally
+
+The lab will take you further and give you some excellent code to stimulate your understanding of the `bootstrap`.
+
+Place the following files in their correct folders and complete the lab.
+
+`r rmdfiles("Lab9", "Intro2R")`
