@@ -22,7 +22,8 @@ Imports:
     purrr,
     s20x,
     gpairs,
-    boot
+    boot,
+    stats4
 Suggests: 
     knitr,
     rmarkdown

@@ -109,7 +109,7 @@ Notice that the boot function has three arguments (you can use more -- see `?boo
   
 
 ```{r}
-out <-boot(ddt,myfun, R = 1000)
+out <-boot(ddt,myfun, R = 10000)
 ```
 
 

@@ -1,0 +1,135 @@
+---
+title: "Laboratory10"
+output: 
+  prettydoc::html_pretty:
+    theme: cayman
+    highlight: github
+    math: katex
+    df_print: paged
+    toc: yes
+    toc_depth: 4
+             
+vignette: >
+  %\VignetteIndexEntry{Laboratory10}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "ws#>",
+  fig.align = "center"
+)
+
+# directory to Lab
+dirdl <- system.file("Lab10",package = "Intro2R")
+
+# create rmd link
+
+library(Intro2R)
+
+
+```
+
+
+# Introduction
+
+This lab is one of the more central labs in this course. The main reason is that it introduces you to maximum likelihood theory.
+
+This theory was first introduced by R.A Fisher. You should try and understand this in all its detail.
+
+# MLE
+
+## The main idea
+
+If we have collected some data, $y_1,y_2, \ldots, y_n$ then the joint density can be written as 
+$$f(y_1,y_2,\ldots y_n|\theta)=f(y_1)f(y_2)\ldots f(y_n)$$
+assuming $Y_i \stackrel{iid}{\sim}D(\theta)$.
+
+Fisher came up with the idea to view the joint as a function in the parameters to be estimated. He called this function the `Likelihood`, $L(\theta)$. He then then proposed to determine the estimates for $\theta$ by finding those values of the parameter(s) ($\theta$) which maximize the likelihood.
+
+## Simplify
+
+The problem with this is that $L(\theta)$ is often complex algebraically. So we can find the value(S) of $\theta$ that maximize the likelihood by maximizing the `log(L(theta))=l(theta)=`$l(\theta)$ where `log` is $log_e$
+
+This is called the log likelihood function.
+
+$$\hat{\theta}_{mle}\in \left\{ \theta: \frac{d}{d\theta}l(\theta)=0\right\}$$
+
+
+# R skills, `install.packages("stats4")`
+
+We will carry out an example of MLE using `mle()` from the stats4 package.
+
+The arguments `mle(minuslogl, start = formals(minuslogl), method = "BFGS",fixed = list(), nobs, ...)` are important. 
+
+Notice that we are using the minus of the log likelihood. ($-l(\theta)$)
+
+
+## Example 1 (1 parameter)
+
+We will use some real data. Suppose 
+
+$$Y\sim Pois(\lambda)$$ 
+
+Where $Y \in (120,192,161,155,113,187,171,172)$
+is the  auditory nerve fiber response frequency in cats
+
+```{r}
+library(stats4)
+#summary(y)
+y<-c(151,146,120,192,161,155,113,187,171,172) # frequency over 10 cats
+ 
+nll <- function(lambda){
+  -sum(stats::dpois(y,lambda, log=TRUE))
+}
+
+mle(nll,
+    nobs = length(y),
+    start = list(lambda = 120),
+    lower = 100,
+    upper = 200,
+    method = "Brent")
+```
+
+
+## Example 2: (2 parameter estimation)
+
+Suppose we wish to estimate $\mu$ and $\sigma$ where
+
+$$Y_i \stackrel{iid}{\sim} N(\mu,\sigma)$$
+and $Y\in (10,12,9,8,11,13,8)$
+
+We can use MLE 
+
+```{r}
+y<- c(10,12,9,8,11,13,8)
+
+nll <- function(mu,sigma){
+  -sum(stats::dnorm(y, mu, sigma, log = TRUE))
+}
+
+mle(nll,start = list(mu=10,sigma=(13-8)/4),nobs = length(y))
+```
+
+
+## More transparent functions in the lab
+
+In the lab you will find that there are more basic and transparent functions which utilize two methods of optimization:
+
+>
+  1. Grid
+  2. Newton Raphson
+  
+  
+The optimization used in the example above calls the `optim()` function so that a lot of the numerical methods are hidden. 
+
+In the lab this will be opened and made more plain.
+
+
+# Finally 
+
+With this brief inroduction you may now start on the lab
+
+`r rmdfiles("Lab10","Intro2R")`
