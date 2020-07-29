@@ -128,6 +128,74 @@ t.test(y1,y2, var.equal = FALSE, conf.level = 0.95)$conf.int
 ```
 
 
+# More generally 
+
+There are a number of functions useful in making confidence intervals for different models. We will not get into many new models but it will be good for you to get the idea of how to calculate intervals and understand the difference in types of intervals.
+
+>
+  1. Confidence Intervals
+  2. Prediction Intervals
+  
+
+## Regression
+
+If the model is SLR
+
+$$y_i=\beta_0 + \beta_1 x_i + \epsilon_i$$
+
+$$\epsilon_i \sim N(0,\sigma^2) $$
+
+The following code will make confidence intervals for $\beta_0$ and $\beta_1$.
+
+In fact any linear model that is used to create objects through `lm()` can be used in `confint()` to construct ci's
+
+```{r}
+ylm <- lm(LENGTH ~ WEIGHT, data = ddt)
+stats::confint(ylm, c("(Intercept)", "WEIGHT"), level=0.95)
+```
+
+
+The same generic function `confint()` have methods for `glm` and `nls` as well.
+
+We may want to find confidence intervals for `E(Y|x_p)` this can be done using the function `predict()`.
+
+Supose `xp = c(1005,1020)` and we wish to find the confidence intervals for $E(LENGTH|WEIGHT=xp)$. That is, the confidence interval for the expected length when the weight takes the values `xp`
+
+```{r}
+predict(ylm, data.frame(WEIGHT = c(1005,1020)), interval = "confidence")
+```
+
+
+We might ask for a `prediction` interval, that is $LENGTH|WEIGHT = x_p$. In this case we are interested in future responses at the given values of $WEIGHT$
+
+```{r}
+predict(ylm, data.frame(WEIGHT = c(1005,1020)), interval = "prediction")
+```
+
+
+## Improvement of the model
+
+As you perfect your knowledge and skills the final product can be quite impressive.
+
+```{r}
+ylm2 <- lm(LENGTH ~ WEIGHT + I(WEIGHT^2), data = ddt)
+# a. combine predictions 
+pred <- predict(ylm2, interval = "prediction")
+dmore <- cbind(ddt, pred)#column bind
+head(dmore)
+# b. Quadratic curve with points added
+library("ggplot2")
+p <- ggplot(dmore, aes(x= WEIGHT, y = LENGTH)) +
+  geom_point() +
+  stat_smooth(method = lm, formula = y~x+I(x^2))
+# c. lower and upper lines added
+p <- p + geom_line(aes(y = lwr), color = "orange", linetype = "dashed")+
+    geom_line(aes(y = upr), color = "orange", linetype = "dashed")
+p + ggtitle("Quadratic curve with prediction intervals")
+```
+
+
+
 # Finally 
 
 With this brief inroduction you may now start on the lab
