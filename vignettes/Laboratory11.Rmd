@@ -1,0 +1,135 @@
+---
+title: "Laboratory11"
+output: 
+  prettydoc::html_pretty:
+    theme: cayman
+    highlight: github
+    math: katex
+    df_print: paged
+    toc: yes
+    toc_depth: 4
+             
+vignette: >
+  %\VignetteIndexEntry{Laboratory11}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "ws#>",
+  fig.align = "center"
+)
+
+# directory to Lab
+dirdl <- system.file("Lab11",package = "Intro2R")
+
+# create rmd link
+
+library(Intro2R)
+
+
+```
+
+
+# Introduction
+
+The creation of analytical confidence intervals and their interpretation will become increasingly important as you move further into statistics.
+
+We must be able to derive the basic intervals from sampling distributions of pivotal statistics. Other interval formulae we will look up in appropriate text books and apply them to our various and particular problems.
+
+# Calculation
+
+There will be essentially two ways in which we will calculate intervals in R. The first way I will loosely call `using R as a calculator` and the second `using built in specialist functions`.
+
+## Example 1
+
+This technique will help you in making your own functions to carry out the task.
+
+### Using R as a calculator
+
+
+For the case of two independent samples (assumed equal population variances) we can estimate the difference in two population means by using the following formulae
+
+$$S_p^2 = \frac{(n_1-1)s_1^2 + (n_2-1)s_2^2}{n_1+n_2-2}$$
+
+$(1-\alpha)100$% ci for $\mu_1-\mu_2$ is 
+
+$$\bar{y}_1-\bar{y}_2 \pm t_{\alpha/2}S_p\left ( \frac{1}{n_1} + \frac{1}{n_2} \right )^{1/2}$$
+where $t_{\alpha/2}=$`qt(1-alpha/2, n1+n2-2)`
+
+Assume two samples `y1` and `y2`
+
+```{r}
+
+y1 <- rnorm(30,mean=35, sd =10)
+y2 <- rnorm(40, mean=25, sd =10)
+
+alpha <- 0.05
+
+s1sq <- var(y1)
+s2sq <- var(y2)
+n1 <- length(y1)
+n2 <- length(y2)
+
+spsq <- ((n1-1)*s1sq + (n2-1)*s2sq)/(n1+n2-2)
+
+mp <- c(-1,1) # make a vector to subtract and then add 
+
+t <- qt(1-alpha/2, n1+n2-2)
+
+ci <- mean(y1)-mean(y2)+ mp*t*sqrt(spsq)*(1/n1 + 1/n2)^(1/2)
+ci
+```
+
+
+### Using built in functions
+
+
+We will use a side effect of `t.test()` 
+
+```{r}
+t.test(y1,y2, var.equal = TRUE, conf.level = 0.95)$conf.int
+```
+
+
+
+## Example 2
+
+We can now look at the case when as before in Example 1 we have two samples but in this case **NOT** assume that the population variances are the same (use `var.test()` to test). 
+
+In such cases we use the `Welch` form of the two sample test and from it calculate the ci.
+
+The formula for the degrees of freedom is  quite different to that of Example 1.
+
+$$ \nu = \frac{(s_1^2/n_1 + s_2^2/n_2)^2}{\frac{(s_1^2/n_1)^2}{n_1-1} + \frac{(s_2^2/n_2)^2}{n_2-1}}$$
+
+The $100(1-\alpha)$% ci for $\mu_1-\mu_2$ where population variances are not equal (assuming random sampling from each pop and the two samples are independent (same as in Example 1)) is given by:
+
+$$\bar{Y}_1-\bar{Y}_2 \pm t_{\alpha/2}\sqrt{\frac{s_1^2}{n_1} + \frac{s_2^2}{n_2}}$$
+where $t_{\alpha/2}=$`qt(1-alpha/2, nu)`
+
+### Using R as a calculator
+
+```{r}
+
+nu = ((s1sq)/n1 +s2sq/n2)^2/((s1sq/n1)^2/(n1-1)+(s2sq/n2)^2/(n2-1))
+
+tnu <- qt(1-alpha/2, nu)
+ci <- mean(y1)-mean(y2) + mp*tnu*(s1sq/n1 + s2sq/n2)^(1/2)
+ci
+```
+
+### Using built in functions
+
+```{r}
+t.test(y1,y2, var.equal = FALSE, conf.level = 0.95)$conf.int
+```
+
+
+# Finally 
+
+With this brief inroduction you may now start on the lab
+
+`r rmdfiles("Lab11","Intro2R")`
