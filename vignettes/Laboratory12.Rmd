@@ -1,0 +1,215 @@
+---
+title: "Laboratory12"
+output: 
+  prettydoc::html_pretty:
+    theme: cayman
+    highlight: github
+    math: katex
+    df_print: paged
+    toc: yes
+    toc_depth: 4
+             
+vignette: >
+  %\VignetteIndexEntry{Laboratory12}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "ws#>",
+  fig.align = "center"
+)
+
+# directory to Lab
+dirdl <- system.file("Lab12",package = "Intro2R")
+
+# create rmd link
+
+library(Intro2R)
+
+
+```
+
+
+# Introduction
+
+This lab is related to Lab 11 and will extend the ideas of confidence intervals and re-implement some of the same functions.  We will need to understand the ideas behind Null Hypothesis Statistical Testing (NHST). 
+
+Interpretation will become very important so please take care to understand the methodology and be aware of some of the short comings of the procedures we teach in class  and encounter in our scientific readings.
+
+
+# NHST -- a beginning
+
+To understand the basic ideas related to classical testing we will look at a Binomial experiment.
+
+Suppose we throw a coin $n=10$ times and observe $x=4$ successes. From this data we could ask and answer a number of questions like:
+
+>
+  1. What is the point estimate of  $p$,  the probability of a success $p=P(Head)$?
+  2. What is the interval estimate of $p$
+  3. Make a conjecture for the value of $p$ and then decide whether that value is plausible in light of the data.
+  
+## Q1. Point estimate
+  
+  To answer questions 1 and 2 we could employ a number of methods already discussed. For example we could create point estimates for $p$ by using MLE or Moment estimators and for interval estimates we could use analytical ci formulae or bootstrap intervals.
+
+If we used MLE or moment estimation we would obtain
+
+$$\hat{p}=\frac{x}{n}$$
+
+## Q2. Confidence interval 
+
+You might re-phrase q2 another way -- what are the plausible values of $p$ -- the answer is the confidence interval for $p$.
+
+```{r}
+n <- 10
+x <- 4
+alpha = 0.05
+data <- rep(c(1,0),c(x,n-x))
+myp <- function(data, indices){
+  d<-data[indices]
+  phat<-mean(d) # number of successes/n
+}
+out<-boot::boot(data, myp,R = 10000)
+boot::boot.ci(out,conf = 1-alpha,type = "perc")
+```
+
+
+
+## Q3. NHST
+
+To answer qu. 3 We will look at the problem from a different perspective. Suppose we assume $p=1-p$, then this means $p=1/2$. We call this the NULL value, it comes about by assuming that the probability of a success is the same as the probability of a failure. This is the skeptics' view.
+
+The skeptic would hold the NULL hypothesis 
+
+$$H_0:p=1/2$$
+
+We then can check to see if the data are consitent with this hypothesis
+
+
+```{r}
+p = dbinom(0:10, size = 10, prob = 1/2)
+
+names(p) = 0:10
+
+coll <- rep(3,11)
+barplot(p, col = coll, main = "Distribution of x with p=1/2")
+
+```
+
+
+## Rejection Acceptance Rejection (RAR) regions
+
+Suppose we make a rejection region $R$ such that if $X\in R$ then we would reject the NULL hypothesis as implausible.
+
+That is, while it is possible that when $p=0.5$ we obtain $X=0,1$ or $X=9,10$ it is NOT likely. We reject the NULL hypothesis understanding that our conclusion could be **wrong**.
+
+```{r}
+
+p = dbinom(0:10, size = 10, prob = 1/2)
+
+names(p) = 0:10
+
+index = c(1,2,10,11)
+
+coll = rep(3,11)
+coll[index]<-1
+
+barplot(p, col = coll, main = "Distribution of x with p=1/2")
+
+
+```
+
+
+
+That is if we reject the NULL when $X\in R$ it is possible we make an error. The probability of rejecting the NULL when it is in fact true ias an error and can be calculated as follows:
+
+$$\alpha=P(X\in \{ 0,1,9,10\}|p=0.5) = `r sum(dbinom(c(0,1,9,10),10,0.5))`$$
+
+This probability is known as the alpha level or the probability of a type 1 error.
+
+So when $X=4$ we note that the NULL is plausible: $X=4$ lies in the acceptance region (GREEN).
+
+This means that $p=0.5$ is plausible -- we don't know its true value but $X=4$ is consistent with $p=0.5$. 
+
+## The P value
+
+For this discussion we will continue with the Binomial example we began with above.
+
+Notice that the Rejection region was made through looking at the extreme values of a statistic -- in this case `X` the number of successes in `n=10` trials. In general we may have some other statistic -- like perhaps $T(X)$ which has a sampling distribution. 
+
+In the case of our Binomial we are wanting to create a statistic that measures how unlikely the data is in relation to the NULL. A statistic that is commonly used is called the `P-Value`.
+
+>The P-value in our case is the probability of obtaining `X=4` or a more extreme value of `X`  given that the NULL is true.
+
+What does it mean to be more extreme? Those values of `X` which are less likely that `X=4`. Notice the probabilities:
+
+```{r}
+round(p[p<p[5]],4) # more extreme
+round(p[p<=p[5]],4) # as or more extreme
+```
+So the P-value would be:
+
+$$P-Value =P(X\le 4| p=0.5) + P(X\ge 6 | p=0.5) =`r 2*pbinom(4,10,0.5)`$$
+We could also calculate this in the following ways:
+
+```{r}
+sum(p[p<=p[5]])
+1-p[6]
+```
+
+
+Notice that if we obtained an `X` value such that it lay directly on the boundary just prior to the acceptance region then the `P-Value` would equal $\alpha$.
+
+This gives us the needed comparison.
+
+If `X` lies in R then the $P-Value \le \alpha$ if `X` lies in A (the acceptance region) then the $P-Value >\alpha$.
+
+
+## Relooking at the confidence interval for `p`
+
+The RAR regions allow us to decide whether the NULL is plausible or not. Or, stating it another way, we can use RAR to decide if `X=4` is consistent with a given $p$, in this case $p=0.5$. 
+
+What if we ask what values of $p$ are consistent with $X=4$. The classical paradigm answers this with a confidence interval
+
+We need to set the alpha level from the RAR (reproduced from above)
+
+$$\alpha=P(X\in \{ 0,1,9,10\}|p=0.5) = `r sum(dbinom(c(0,1,9,10),10,0.5))`$$
+
+Now we can make a confidence interval for $p$ with the same alpha
+
+```{r}
+n <- 10
+x <- 4
+alpha = 0.0214844
+data <- rep(c(1,0),c(x,n-x))
+myp <- function(data, indices){
+  d<-data[indices]
+  phat<-mean(d) # number of successes/n
+}
+out<-boot::boot(data, myp,R = 10000)
+boot::boot.ci(out,conf = 1-alpha,type = "norm")
+```
+
+
+Using a `Normal` method for bootstrap we get  a ci (0.0376,  0.7561). This means that $H_0:p=1/2$ is plausible because the NULL value (1/2) is contained withing the plausible interval (the ci).
+
+# Testing Rules
+
+We can summarize what we have learnt in the following way.
+
+A Null hypothesis test can be done in the following three ways.
+
+>
+  a) RAR, Tcalc (X=4 in the above case)
+  b) Pvalue, alpha (0.0214844 in the above case)
+  c) ci, NULL value (1/2 in the above case)
+
+
+# Finally 
+
+With this brief inroduction you may now start on the lab
+
+`r rmdfiles("Lab12","Intro2R")`
