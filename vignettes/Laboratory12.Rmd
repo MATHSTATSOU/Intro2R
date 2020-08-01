@@ -208,6 +208,101 @@ A Null hypothesis test can be done in the following three ways.
   c) ci, NULL value (1/2 in the above case)
 
 
+# Power
+
+To reject the NULL hypothesis when it is TRUE is a TYPE 1 error.
+
+$$P(Type\; 1 \; ERROR) = \alpha$$
+
+To accept the NULL hypothesis when it is FALSE is an error called a TYPE 2 error
+
+$$P(Type\; 2\; ERROR) = \beta$$
+
+To REJECT the NULL when it is FALSE is NOT and error and its probability  is called $POWER$
+
+$$POWER=1-\beta$$
+
+Having more power means that the test is more sensitive. 
+
+$$H_0: p = 1/2$$
+
+$$ H_a: p \ne 1/2 $$
+
+Suppose a value of $p$ under $H_a$ is $p=3/4$. Then we can determine the errors and power.
+
+We will use `A= accceptance values (2:8)` and `R = rejection interval (0,1,9,10)`
+
+
+
+## Example 
+
+We will now take the Binomial example and this time explore the errors and power discussed above.
+
+```{r}
+p <- dbinom(0:10,size = 10, prob=1/2)
+names(p) <- 0:10
+
+pa <- dbinom(0:10,size = 10, prob = 3/4)
+names(pa) <- 0:10
+
+coll <- rep(3,11)
+colla <- rep(4,11)
+
+h<-barplot(p, col = coll , main = "p=1/2, 3/4", ylim =c(0, 1.2*max(p,pa)))
+barplot(pa, col = rgb(1,0,1,0.2), add=TRUE)
+lines(h,p)
+lines(h,pa)
+```
+
+
+### $\alpha$ 
+
+$\alpha$ is the probability that we reject the NULL when it is TRUE. Since we know the Rejection interval is $R=(0,1,9,10)$.
+
+So
+
+$$\alpha = P(R|p=1/2)=`r sum(dbinom(x=c(0,1,9,10), size = 10, prob = 1/2))`$$
+
+
+### $\beta$
+
+$\beta$ is the probability that we accept the NULL given it is TRUE.
+
+so
+
+$$\beta = P(A|p=3/4) = `r sum(dbinom(x=2:8, size = 10, prob = 3/4))`$$
+
+### Power = $1-\beta$
+
+Power is defined so that 
+
+$$1-\beta= `r 1-sum(dbinom(x=2:8, size = 10, prob = 3/4))`$$
+
+This is the calculation for the case when the alternate hypothesis has $H_a:p=3/4$.
+
+If we now take $H_a: p = p_a$ where $p_a\in (0,1)$ we get
+
+$$power = 1- P(X\in A|p=p_a)$$
+
+```{r}
+mypow = function(p){
+  1-sum(dbinom(2:8,10,p))
+}
+
+pa = as.list(x=seq(0,1, length = 100))
+pow <- purrr::map(pa, ~mypow(.x))
+plot(x=pa,
+     y=pow, 
+     xlim=c(0,1), 
+     xlab = "Alternate Probabiity",
+     ylab = expression(1-beta),
+     main = "Power over values of pa",
+     type = "l",
+     lwd = 2
+     )
+```
+
+
 # Finally 
 
 With this brief inroduction you may now start on the lab
