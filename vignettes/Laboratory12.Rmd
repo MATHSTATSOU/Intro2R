@@ -285,11 +285,11 @@ If we now take $H_a: p = p_a$ where $p_a\in (0,1)$ we get
 $$power = 1- P(X\in A|p=p_a)$$
 
 ```{r}
-mypow = function(p){
-  1-sum(dbinom(2:8,10,p))
+mypow = function(p,A=2:8){
+  1-sum(dbinom(A,10,p))
 }
 
-pa = as.list(x=seq(0,1, length = 100))
+pa = as.list(x=seq(0,1, length = 1000))
 pow <- purrr::map(pa, ~mypow(.x))
 plot(x=pa,
      y=pow, 
@@ -300,6 +300,64 @@ plot(x=pa,
      type = "l",
      lwd = 2
      )
+```
+
+# Summarizing the plot 
+
+The plot of power versus $p_a$ shows that as the alternate probability  differs from the NULL $H_0: p =1/2$ so the power goes up. The shape will change as the acceptance set changes.
+
+## Different `A` intervals
+
+```{r}
+layout(matrix(1:6,nrow= 2, ncol = 3, byrow = TRUE))
+plotp = function(Astar){
+mypow = function(p,A=Astar){
+  1-sum(dbinom(A,10,p))
+}
+
+pa = as.list(x=seq(0,1, length = 1000))
+pow <- purrr::map(pa, ~mypow(.x))
+plot(x=pa,
+     y=pow, 
+     xlim=c(0,1), 
+     xlab = "Alternate Probabiity",
+     ylab = expression(1-beta),
+     main = "Power over values of pa",
+     type = "l",
+     lwd = 2
+     )
+text(0.5,0.8, paste0("A=",Astar[1], ",...,", Astar[length(Astar)]))
+}
+
+plotp(2:8)
+plotp(3:7)
+plotp(4:6)
+plotp(3:8)
+plotp(4:8)
+plotp(5:8)
+```
+
+## Built in functions to calculate power
+
+Compute the power of the two-sample test for proportions, or determine parameters to obtain a target power.
+
+```{r, eval = FALSE}
+power.prop.test()
+power.prop.test(n = NULL, p1 = NULL, p2 = NULL, sig.level = 0.05,
+                power = NULL,
+                alternative = c("two.sided", "one.sided"),
+                strict = FALSE, tol = .Machine$double.eps^0.25)
+
+```
+
+Compute the power of the one-or two-sample t test, or determine parameters to obtain a target power.
+
+```{r,eval = FALSE}
+power.t.test(n = NULL, delta = NULL, sd = 1, sig.level = 0.05,
+             power = NULL,
+             type = c("two.sample", "one.sample", "paired"),
+             alternative = c("two.sided", "one.sided"),
+             strict = FALSE, tol = .Machine$double.eps^0.25)
 ```
 
 
