@@ -48,7 +48,7 @@ Suppose we throw a coin $n=10$ times and observe $x=4$ successes. From this data
 
 >
   1. What is the point estimate of  $p$,  the probability of a success $p=P(Head)$?
-  2. What is the interval estimate of $p$
+  2. What is the interval estimate of $p$?
   3. Make a conjecture for the value of $p$ and then decide whether that value is plausible in light of the data.
   
 ## Q1. Point estimate
@@ -266,7 +266,7 @@ $$\alpha = P(R|p=1/2)=`r sum(dbinom(x=c(0,1,9,10), size = 10, prob = 1/2))`$$
 
 ### $\beta$
 
-$\beta$ is the probability that we accept the NULL given it is TRUE.
+$\beta$ is the probability that we accept the NULL given it (the NULL hypothesis) is FALSE.
 
 so
 
@@ -337,7 +337,78 @@ plotp(4:8)
 plotp(5:8)
 ```
 
-## Built in functions to calculate power
+# The Non Central T distribution
+
+The definition of the central T statistic is given by
+
+$$T  = \frac{Z}{\sqrt{\chi^2/\nu}}$$
+where $Z\sim N(0,1)$ and $\chi^2\sim Chisq(\nu=n-1)$ and further $Z\perp \chi^2$.
+
+The non-central T statistic is defined as 
+
+$$T_{ncp}=\frac{Z + \mu_{ncp}}{\sqrt{\chi^2/\nu}}$$
+where $\mu_{ncp}$ is the so called non centrality parameter.
+
+In R we can plot the non central t distribution
+
+```{r}
+curve(
+  dt(x,
+     ncp=4,
+     df = 10,
+     ), 
+    xlim = c(4-3,4+5),
+    main = "The non-central t distribution"
+  )
+```
+
+
+Suppose that we take a simple one sample problem where the population has a mean of $\mu$. We will test the Null hypothesis
+
+$$H_0:\mu=0$$
+Versus
+
+$$H_a:\mu\ne 0$$
+
+We will now make the $T$ statistic for the case when $H_0:\mu = 0$
+
+$$T=\frac{\frac{\bar{X}-0}{\sigma/\sqrt{n}}}{\sqrt{\frac{(n-1)s^2}{(n-1)\sigma^2}}}=\frac{\bar{X}}{s/\sqrt{n}}$$
+
+This can be re-written as 
+
+$$T = \frac{\frac{(\bar{X}-\mu)}{\sigma/\sqrt{n}}+\frac{\mu}{\sigma/\sqrt{n}}}{\sqrt{\frac{(n-1)s^2}{(n-1)\sigma^2}}} $$
+Since the rejection region corresponds to the interval $|T|>t_{\alpha/2}$ we can find the power by calculating the probability of rejecting the NULL given it is false. This is the probability of rejecting the NULL when $H_a:\mu\ne 0$ is true. This will mean that $T=T_{ncp}$.  If $H_a:\mu = \mu_a$ then the ncp is $\mu_{ncp}=\frac{\mu_a\sqrt{n}}{\sigma}$ and finally:
+
+$$Power = F_{n-1, ncp = \sqrt{n}\mu_a/\sigma}(-t_{\alpha/2}) +1- F_{n-1, ncp = \sqrt{n}\mu_a/\sigma}(t_{1-\alpha/2})$$
+
+## Example
+
+Suppose
+
+$H_0:\mu = 0$, $H_a:\mu =4$, $\sigma=10$ and $n=11$.
+
+```{r}
+alpha = 0.05
+n  = 11
+mua = 4
+sigma = 10
+t = qt(1-alpha/2, n-1)
+power = pt(-t, df = n-1, ncp = sqrt(n)*mua/sigma) +
+  1 - pt(t, df = n-1, ncp = sqrt(n)*mua/sigma)
+power
+
+# The function estimates sigma by sd -- we will do the reverse
+out <- power.t.test(n=n,delta = mua,sd = sigma,sig.level = 0.05,type = "one.sample" )
+out$power
+
+curve(power.t.test(n=n,delta = x,sd = sigma,sig.level = 0.05,type = "one.sample" )$power,xlim = c(-10,10))
+```
+
+
+
+# Built in functions to calculate power
+
+## These are in the base packages
 
 Compute the power of the two-sample test for proportions, or determine parameters to obtain a target power.
 
@@ -358,6 +429,13 @@ power.t.test(n = NULL, delta = NULL, sd = 1, sig.level = 0.05,
              type = c("two.sample", "one.sample", "paired"),
              alternative = c("two.sided", "one.sided"),
              strict = FALSE, tol = .Machine$double.eps^0.25)
+```
+
+
+## `pwr` package has more
+
+```{r,eval = FALSE}
+install.packages("pwr")
 ```
 
 
