@@ -116,8 +116,11 @@ index = c(1,2,10,11)
 
 coll = rep(3,11)
 coll[index]<-1
-
-barplot(p, col = coll, main = "Distribution of x with p=1/2")
+coll[5] <- 2
+barplot(p, col = coll, 
+        main = "Distribution of x with p=1/2\n Rejection regions on x axis, bars in Black",
+        xlab = "Number of successes",
+        ylab = "Probability")
 
 
 ```
@@ -222,7 +225,7 @@ To REJECT the NULL when it is FALSE is NOT and error and its probability  is cal
 
 $$POWER=1-\beta$$
 
-Having more power means that the test is more sensitive. 
+Having more power means that the test is more sensitive to departures from the NULL. 
 
 $$H_0: p = 1/2$$
 
@@ -300,6 +303,7 @@ plot(x=pa,
      type = "l",
      lwd = 2
      )
+abline(v=1/2, lwd =2, col = "Blue")
 ```
 
 # Summarizing the plot 
@@ -379,7 +383,11 @@ This can be re-written as
 $$T = \frac{\frac{(\bar{X}-\mu)}{\sigma/\sqrt{n}}+\frac{\mu}{\sigma/\sqrt{n}}}{\sqrt{\frac{(n-1)s^2}{(n-1)\sigma^2}}} $$
 Since the rejection region corresponds to the interval $|T|>t_{\alpha/2}$ we can find the power by calculating the probability of rejecting the NULL given it is false. This is the probability of rejecting the NULL when $H_a:\mu\ne 0$ is true. This will mean that $T=T_{ncp}$.  If $H_a:\mu = \mu_a$ then the ncp is $\mu_{ncp}=\frac{\mu_a\sqrt{n}}{\sigma}$ and finally:
 
-$$Power = F_{n-1, ncp = \sqrt{n}\mu_a/\sigma}(-t_{\alpha/2}) +1- F_{n-1, ncp = \sqrt{n}\mu_a/\sigma}(t_{1-\alpha/2})$$
+$$Power = F_{(n-1, ncp = \sqrt{n}\mu_a/\sigma)}(-t_{\alpha/2}) +1- F_{(n-1, ncp = \sqrt{n}\mu_a/\sigma)}(t_{1-\alpha/2})$$
+
+where $F(x)=P(X\le x)$ known as the cumulative distribution function. We can calculate this probability in R using `pt`
+
+$$F_{(n-1,ncp)}(x) = \tt{pt(x,ncp,df=n-1)}$$
 
 ## Example
 
@@ -434,10 +442,28 @@ power.t.test(n = NULL, delta = NULL, sd = 1, sig.level = 0.05,
 
 ## `pwr` package has more
 
+A good description of the package is given here <https://www.statmethods.net/stats/power.html>
+
 ```{r,eval = FALSE}
 install.packages("pwr")
 ```
 
+
+All functions for power and sample size analysis in the pwr package begin with pwr. Functions are available for the following statistical tests:
+
+
+>
+  1. pwr.p.test: one-sample proportion test
+  2. pwr.2p.test: two-sample proportion test
+  3. pwr.2p2n.test: two-sample proportion test (unequal sample sizes)
+  4. pwr.t.test: two-sample, one-sample and paired t-tests
+  5. pwr.t2n.test: two-sample t-tests (unequal sample sizes)
+  6. pwr.anova.test: one-way balanced ANOVA
+  7. pwr.r.test: correlation test
+  8. pwr.chisq.test: chi-squared test (goodness of fit and association)
+  9. pwr.f2.test: test for the general linear model
+  
+  
 
 # Finally 
 
