@@ -1,0 +1,5 @@
+ model {
+    x ~ dbinom(p,n) # Likelihood
+    p ~ dbeta(1,1) # Unif(0,1)
+    }
+    

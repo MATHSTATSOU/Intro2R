@@ -23,7 +23,8 @@ Imports:
     s20x,
     gpairs,
     boot,
-    stats4
+    stats4,
+    shiny
 Suggests: 
     knitr,
     rmarkdown
