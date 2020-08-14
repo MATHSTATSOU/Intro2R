@@ -24,7 +24,10 @@ Imports:
     gpairs,
     boot,
     stats4,
-    shiny
+    shiny,
+    MCMCpack,
+    ggmcmc,
+    coda
 Suggests: 
     knitr,
     rmarkdown
