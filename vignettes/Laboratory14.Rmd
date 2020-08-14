@@ -1,0 +1,262 @@
+---
+title: "Laboratory14"
+output: 
+  prettydoc::html_pretty:
+    theme: cayman
+    highlight: github
+    math: katex
+    df_print: paged
+    toc: yes
+    toc_depth: 4
+             
+vignette: >
+  %\VignetteIndexEntry{Laboratory14}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "ws#>",
+  fig.align = "center"
+)
+
+# directory to Lab
+dirdl <- system.file("Lab14",package = "Intro2R")
+
+# create rmd link
+
+library(Intro2R)
+
+
+```
+
+
+# Introduction
+
+This lab is about practical SLR and uses 3 examples from the text to facilitate a review of some of the more important introductory concepts we need to know and understand when performing regression analysis.
+
+There is also a `shiny` app to make run and learn some practical R skills to help you in your research and presentations.
+
+The lab will inspect and develop formulae related to SLR. Most of the relationships will already be known by you. 
+
+You will need to perfect your knowledge in this area and be able to make your own R functions.
+
+>
+  1. $SS_{XY}=\sum (X_i-\bar{X})(Y_i-\bar{Y})$
+  2.  $\hat{\beta}_1= \frac{SS_{XY}}{SS_{XX}}$
+  3. $R^2 = \frac{MSS}{TSS}$
+
+
+
+# Bayesian methods of estimation
+
+The classical paradigm creates  its  formulae and interpretation around a particular conditioning:
+
+$$X|\theta$$
+where $\theta$ is the parameter and $X$ is the random variable representing possible data.
+
+The Bayesian paradigm conditions differently. The theory is based around the following:
+
+$$\theta|X$$
+
+This means that the theory is developed very differently and the interpretation is also different.
+
+The conditioning is obvious when we express the parameter and data in the Bayesian formula:
+
+$$p(\theta|x)\propto p(\theta)f(x|\theta)$$
+
+Fortunately many of the statistical techniques will find an application here.
+
+Since some of the Bayesian tools are platform dependent I will use the R package `MCMCpack` to carry out our Bayesian analyses.
+
+### Point estimate
+
+Generally, Bayesians use the posterior mean as the point estimate. The reason for this is that the posterior mean minimizes the mean posterior squared error.
+
+$$\hat{\theta} = E(\theta|x)=\mu_{\theta|x}$$
+
+### Interval estimates
+
+These come in many flavours but the common ones are quantile intervals, often called Bayesian Credible Intervals, BCI.
+
+$$BCI=[\theta_{\alpha/2}, \theta_{1-\alpha/2}]$$
+Or HDI, Highest Density Interval
+
+$$HDI = [\theta_L, \theta_U]$$
+The HDI is made so that the area above the interval is $1-\alpha$ but the distance $\theta_U-\theta_L$ is smallest.
+
+In both cases $P(\theta\in Interval) = 1-\alpha$ 
+where $\alpha$ is the sum of the upper tail areas of the posterior $\theta$ distribution.
+
+### OJUICE example
+
+The data is already available in the current package. We will first of all investigate the data using a [loess curve](https://en.wikipedia.org/wiki/Local_regression) this is known as **locally estimated scatterplot smoothing**.  We use it to see what the data itself can tell us about the trend resident in the data and hence what model will be appropriate.
+
+
+```{r}
+data(ojuice)
+head(ojuice)
+library(ggplot2)
+
+g <- ggplot(ojuice, aes(x=Pectin, y=SweetIndex)) 
+g <- g + geom_point() + stat_smooth(method = "loess", formula = y~x, col = "Red") 
+g <- g +  stat_smooth( method = "lm", formula =y~x+I(x^2)+I(x^3))
+
+print(g)
+
+
+
+```
+
+
+#### Commenting on the graph
+
+The plot shows some curvature in places (Red line) so to model this we have introduced  a cubic linear model (blue).
+
+
+
+```{r}
+library(MCMCpack)
+
+post <- MCMCregress(SweetIndex ~ Pectin + I(Pectin^2) + I(Pectin^3),
+                    burnin=1000,
+                    mcmc = 10000,
+                    data = ojuice)
+s<-ggmcmc::ggs(post)
+ggmcmc::ggs_histogram(s)
+
+```
+
+
+
+We need some summary stats to make point and interval estimates
+
+```{r}
+summary(post)
+
+```
+
+Notice that all the $\beta$ parameters have 95% BCI's contain 0. We should try a simpler model.
+
+
+```{r}
+post2 <- MCMCregress(SweetIndex ~ Pectin + I(Pectin^2),
+                    burnin=1000,
+                    mcmc = 10000,
+                    data = ojuice)
+s2<-ggmcmc::ggs(post2)
+ggmcmc::ggs_histogram(s2)
+summary(post2)
+```
+
+
+Again the $\beta$ parameters all have BCI's containg zero.
+
+We will therefore use a SLR model
+
+```{r}
+post3 <- MCMCregress(SweetIndex ~ Pectin ,
+                    burnin=1000,
+                    mcmc = 10000,
+                    marginal.likelihood = "Laplace",
+                    data = ojuice)
+s3<-ggmcmc::ggs(post3)
+ggmcmc::ggs_histogram(s3)
+summary(post3)
+```
+
+## Conclusion
+
+The final Bayesian model we chose gives the following formulation.
+
+$$SweetIndex = 6.256242 - 0.002327 Pectin$$
+It would be interesting to see what the classical paradigm gives for point estimates and ci's for the same model.
+
+```{r}
+ylm <- lm(SweetIndex ~ Pectin, data = ojuice)
+summary(ylm)
+s20x::ciReg(ylm)
+```
+This results in the following formula
+
+$$SweetIndex = 6.2520679 - 0.00231060 Pectin$$
+
+# Comparison
+
+The results are similar. They would be different if we used informative priors.
+
+## Priors
+
+When we ran the Bayesian model we let the software assign default priors.
+
+Below are the options for the function.
+
+```
+MCMCregress(
+  formula,
+  data = NULL,
+  burnin = 1000,
+  mcmc = 10000,
+  thin = 1,
+  verbose = 0,
+  seed = NA,
+  beta.start = NA,
+  b0 = 0,
+  B0 = 0,
+  c0 = 0.001,
+  d0 = 0.001,
+  sigma.mu = NA,
+  sigma.var = NA,
+  marginal.likelihood = c("none", "Laplace", "Chib95"),
+  ...
+)
+```
+The description of the function says:
+
+>
+  This function generates a sample from the posterior distribution of a linear regression model with Gaussian errors using Gibbs sampling (with a multivariate Gaussian prior on the beta vector, and an inverse Gamma prior on the conditional error variance). The user supplies data and priors, and a sample from the posterior distribution is returned as an mcmc object, which can be subsequently analyzed with functions provided in the coda package.
+  
+
+In our case there are two $\beta$'s so the prior would take the form:
+
+$$\beta \sim \mathcal{N}(b_0,B_0^{-1})$$
+
+Notice that `b0 = 0` (the default) this will cause the prior mean to take a value of $(0,0)^{'}$. `B0 = 0` (the default) places an improper uniform on $\beta$. If you make `B0=0.001` say, then $B_0^{-1}=0.001I_2$ where $I_2$ is the $2\times 2$ identity matrix.
+
+The prior on the variance is an inverse gamma:
+
+$$\sigma^{-2} \sim \mathcal{G}amma(c_0/2, d_0/2)$$
+The default values are `c0=0.001` and `d0=0.001`. You may like to change the priors to see how they effect the posterior.
+
+## Intervals
+
+While we obtained similar results using non-informative priors (the defaults in this case) we will in many cases use meta-analysis to inform the priors and hence get different results.
+
+But what is *always* different is the interpretation of the intervals -- this is because of the conditioning of the paradigm: $\theta|X$. The intervals are probabilistic. How does this play out? Lets look at one of the intervals:
+
+The 95% BCI for $\beta_1$ is $(-0.004243, -0.0004487 )$. This means that we could say:
+
+> 
+The probability that $\beta_1$ lies in the interval $(-0.004243, -0.0004487 )$ is 0.95
+
+This is what we **CANNOT SAY** under the classical paradigm.
+
+Under the classical paradigm we must appeal to "confidence" etc. The paradigm only gives meaningful interpretation under repeated sampling -- if the experiment was repeated over and over 95% of the intervals would contain $\beta_1$ and 5% would not.
+
+
+We should always check to see that we have good evidence that the MCMC simulation went well and the chains converged.
+There are some good diagnostics for this many of which are packaged in `coda`
+
+```{r}
+geweke.diag(post3)
+raftery.diag(post3) # this is made to be used on a pilot mcmc run
+#gelman.plot(post3) # this need 2 or more chains
+```
+
+# Finally 
+
+With this brief introduction you may now start on the lab
+
+`r rmdfiles("Lab14","Intro2R")`

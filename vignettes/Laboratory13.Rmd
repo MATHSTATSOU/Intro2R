@@ -148,7 +148,7 @@ The following are helpful:
 >
   1. R package: rstan + requires c++ compiler -- usually Rtools will do -- see <https://mc-stan.org/users/interfaces/>
   2. R package: MCMCpack
-  3. R package: rjags + Software for PC: JAGS 
+  3. R package: rjags + [Software for PC: JAGS](https://sourceforge.net/projects/mcmc-jags/files/) 
   4. Software available through CRAN: <https://cran.r-project.org/web/views/Bayesian.html>
   
 
