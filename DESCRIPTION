@@ -27,7 +27,8 @@ Imports:
     shiny,
     MCMCpack,
     ggmcmc,
-    coda
+    coda,
+    plotly
 Suggests: 
     knitr,
     rmarkdown

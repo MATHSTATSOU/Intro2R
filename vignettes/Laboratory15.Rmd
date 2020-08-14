@@ -1,0 +1,98 @@
+---
+title: "Laboratory15"
+output: 
+  prettydoc::html_pretty:
+    theme: cayman
+    highlight: github
+    math: katex
+    df_print: paged
+    toc: yes
+    toc_depth: 4
+             
+vignette: >
+  %\VignetteIndexEntry{Laboratory15}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "ws#>",
+  fig.align = "center",
+  message = FALSE,
+  warning = FALSE
+)
+
+# directory to Lab
+dirdl <- system.file("Lab15",package = "Intro2R")
+
+# create rmd link
+
+library(Intro2R)
+
+
+```
+
+
+# Introduction
+
+This lab is a short one. It reviews simple linear regression. There are six questions to answer concerning seed germination.
+
+The main emphasis of the lab is interpretation. 
+
+In this introduction I will emphasize the Bayesian methodology. You should understand both paradigms but be most conversant with the classical.
+
+# The data
+
+The data comes from that supplied with the 5th edition of the  book. 
+
+We will use a loess smoother to help understand the nature of the trend within the data. We will also use the `plotly` package to convert the ggplot to a plotly enhanced graphic so that on hover we can detect unusual points.
+
+```{r}
+data(seed)
+library(ggplot2)
+library(plotly)
+head(seed)
+g <- ggplot(seed, aes(x = TEMP, y = CHANGE ))
+g <- g + geom_point() + stat_smooth(method = "loess", formula = y ~ x)
+ggplotly(g)
+```
+
+## Interpretation of plot
+
+The point corresponding to `TEMP = 301` is away from the trend and likely an outlier. Otherwise the trend looks straight line and hence a SLR model would be appropriate after the 5th point is removed.
+
+## Bayesian analysis
+
+We will use MCMCpack to create a sample from the posterior.
+
+We will examine the histograms of the samples to see if the distributions have likely reached stationarity.  Also we will inspect the plots to understand the skewness and modality of  the distributions.
+
+```{r,message=FALSE, warning=FALSE}
+library(ggmcmc)
+library(MCMCpack)
+which(seed$TEMP==301.0)
+seedn <- seed[-5,]
+
+postn <-MCMCregress(formula = CHANGE ~ TEMP,data = seedn, burnin = 1000, mcmc = 10000,thin = 1)
+
+s <- ggs(postn)
+ggs_histogram(s)
+sm <- summary(postn)
+sm
+```
+
+The plots are in alphabetical order, and show symmetrical well formed uni-modal distributions for the beta parameters and a typical right skewed distribution for the variance.
+
+# Equation of the estimating trend
+
+From the means of the sample distributions we obtain the Bayesian point estimates
+
+$$ CHANGE = `r sm$statistics[1,1]`  `r sm$statistics[2,1]` TEMP $$
+
+# Finally 
+
+With this brief introduction you may now start on the lab
+
+`r rmdfiles("Lab15","Intro2R")`

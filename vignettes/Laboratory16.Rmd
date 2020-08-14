@@ -1,0 +1,66 @@
+---
+title: "Laboratory16"
+output: 
+  prettydoc::html_pretty:
+    theme: cayman
+    highlight: github
+    math: katex
+    df_print: paged
+    toc: yes
+    toc_depth: 4
+             
+vignette: >
+  %\VignetteIndexEntry{Laboratory16}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "ws#>",
+  fig.align = "center",
+  message = FALSE,
+  warning = FALSE
+)
+
+# directory to Lab
+dirdl <- system.file("Lab16",package = "Intro2R")
+
+# create rmd link
+
+library(Intro2R)
+
+
+```
+
+
+# Introduction
+
+This lab is about **correlation** and **adjusted R squared**.
+
+We will be looking at the `Pearson moment correlation coefficient` defined as
+
+$$ r = \frac{SS_{xy}}{\sqrt{SS_{xx}SS_{yy}}} $$
+this measures the amount of linear relationship between two variables x, and y.
+
+This is related to another very important statistic, the `coefficient of determination` otherwise known as `multiple r squared`. This is defined as 
+
+$$R^2 = \frac{MSS}{TSS}$$
+This is quantifying the fraction of the **TSS** (Total sum of squares = variability of the response = $SS_{yy}$) explained by the model.
+We sometimes express this as a percentage, example, if $R^2=0.6456$ then we might say:
+
+>
+  64.56% of the variabilty in the response is explained by the model through x
+  
+  
+  For SLR we can derive
+  
+  $$R^2 = r^2$$
+
+
+# Finally 
+
+With this brief introduction you may now start on the lab
+
+`r rmdfiles("Lab16","Intro2R")`
