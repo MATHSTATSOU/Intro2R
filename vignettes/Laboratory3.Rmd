@@ -230,7 +230,7 @@ The linear models are `LINEAR` in the parameters. Please note that in the models
 For example 
 
 $$ E(Y)=\beta_0e^{\beta_1 x}$$
-Is NOT linear in the parameters $\beta_0$ and $\beta_1$ and would be an example of a non-linear model.
+Is NOT linear in the parameter $\beta_1$ and would be an example of a non-linear model.
 
 Sometimes we can transform non-linear models to linear, example:
 

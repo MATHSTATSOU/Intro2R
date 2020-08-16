@@ -251,7 +251,7 @@ If additional signal is in the residual plot then you will need to adjust the ba
 
 To check which model is better you will need a criterion. Many statisticians use `AIC`since this is generally applicable -- choose the model with smallest `AIC`. If you use `MLR` (multiple linear regression) as in the case of a quadratic then for our course we can use $R_a^2$ -- choose the model with the biggest adjusted R squared. 
 
-You may need to try a few linear models until the assumptions are confirmed. Once the best model is determined ("best" determined by satisfying the creteria of a Linear Model and the biggest $R_a^2$) then go ahead and use that model to solve whatever problems you have been confronted with.
+You may need to try a few linear models until the assumptions are confirmed. Once the best model is determined ("best" determined by satisfying the criteria of a Linear Model and the biggest $R_a^2$) then go ahead and use that model to solve whatever problems you have been confronted with.
 
 
   

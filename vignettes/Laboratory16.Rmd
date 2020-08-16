@@ -37,7 +37,7 @@ library(Intro2R)
 
 # Introduction
 
-This lab is about **correlation** and **adjusted R squared**.
+This lab is about **correlation**,  **adjusted R squared** and **prediction**.
 
 We will be looking at the `Pearson moment correlation coefficient` defined as
 
@@ -57,6 +57,110 @@ We sometimes express this as a percentage, example, if $R^2=0.6456$ then we migh
   For SLR we can derive
   
   $$R^2 = r^2$$
+
+When we wish to predict a new response $y$ given a particular x value $x_p$ or if we wish to predict a mean response $E(Y)$ given an x value $x_p$ we call this **prediction**. There are many functions in R that will help you do this. The main one is `predict()`.
+
+# The data
+
+The data has been packaged in the current library.
+
+```{r}
+data("liquid")
+head(liquid)
+```
+## Plot the data
+
+In order to examine the trend in the data we will use a loess smoother:
+
+```{r}
+library(ggplot2)
+g <- ggplot(liquid, aes(x = TIME, y = MASS)) + geom_point()
+g1 <- g + geom_smooth(method = "loess", formula = y~x)
+g1
+```
+
+
+The plot has a curved trend. It is likely we should not conclude with a straight line but we could start with this and then make improvements.
+
+## Straight line, quadratic or exponential?
+
+A SLR line would be easy to fit under either paradigm. Lets make a raft of models and name the objects `ylm1, ylm2, ...`
+and use adjusted $R^2$ to choose between them.
+
+```{r}
+ylm1 <- lm(MASS ~ TIME, data = liquid)
+ylm2 <- lm(MASS ~ TIME + I(TIME^2), data = liquid)
+ylm3 <- lm(log(MASS+1) ~ TIME + I(TIME^2), data=liquid)
+s1 <- summary(ylm1)
+s2 <- summary(ylm2)
+s3 <- summary(ylm3)
+Rasq <- list(Rasq1 = s1$adj.r.squared,
+               Rasq2 = s2$adj.r.squared,
+               Rasq3 = s3$adj.r.squared)
+Rasq
+
+```
+
+The second model is the winner (Largest $R_a^2$) but not by much.
+
+We will use a quadratic to model the relationship.
+
+```{r}
+sm <- summary(ylm2)
+cf = coef(ylm2)
+cf
+```
+
+
+The model is now 
+
+$$\widehat{MASS} = `r cf[1]` + `r cf[2]`*TIME + `r cf[3]`*TIME^2 $$
+
+We can now plot the fitted model
+
+```{r}
+g2 <- g + geom_smooth(method = "lm", formula = y~x+I(x^2))
+g2 <- g2 + ggtitle("A quadratic model")
+g2
+```
+
+
+### Criticism
+
+The model works well within most of the domain of `TEMP` but at the extreme end the estimating trend turns up -- this is a property of the quadratic and would not be of much concern for estimation and prediction within most of the range of TEMP. It does give interpretational problems however, at extreme TEMP values -- it gives the appearance that MASS would begin to increase with higher TEMPS.
+
+## Using the exponential model
+
+The model I would like us to look at is the non linear exponential model 
+
+$$E(MASS|TIME) = \beta_0 e^{\beta_1 TIME + \beta_2 TIME^2}$$
+We will use the `nls` function in the `STATS` base package.
+
+```{r}
+summary(liquid)
+nls1 <- nls(formula = MASS ~ b0*exp(b1*TIME + b2*TIME^2 ),
+            data = liquid,
+            start = list(b0 = 7, b1 = -0.05,b2  = - 0.0005 ),
+            trace = TRUE
+            )
+summary(nls1)
+
+```
+
+## Plot the exponential model
+
+We will now plot the points and use the estimates created above using Base R.
+
+```{r message=TRUE, warning=TRUE}
+cf <- coef(nls1)
+
+mynlsfun <- function(x) cf[1]*exp(cf[2]*x + cf[3]*x^2)
+
+plot(MASS ~ TIME, data = liquid, main = "Non linear Least Squares")
+
+curve(mynlsfun, lwd = 3, col = "Blue", add = TRUE)
+
+```
 
 
 # Finally 

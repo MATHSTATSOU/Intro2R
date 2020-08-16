@@ -171,7 +171,7 @@ summary(post3)
 
 The final Bayesian model we chose gives the following formulation.
 
-$$SweetIndex = 6.256242 - 0.002327 Pectin$$
+$$\widehat{SweetIndex} = 6.256242 - 0.002327 Pectin$$
 It would be interesting to see what the classical paradigm gives for point estimates and ci's for the same model.
 
 ```{r}
@@ -181,7 +181,7 @@ s20x::ciReg(ylm)
 ```
 This results in the following formula
 
-$$SweetIndex = 6.2520679 - 0.00231060 Pectin$$
+$$\widehat{SweetIndex} = 6.2520679 - 0.00231060 Pectin$$
 
 # Comparison
 
@@ -219,13 +219,16 @@ The description of the function says:
   This function generates a sample from the posterior distribution of a linear regression model with Gaussian errors using Gibbs sampling (with a multivariate Gaussian prior on the beta vector, and an inverse Gamma prior on the conditional error variance). The user supplies data and priors, and a sample from the posterior distribution is returned as an mcmc object, which can be subsequently analyzed with functions provided in the coda package.
   
 
-In our case there are two $\beta$'s so the prior would take the form:
+In our case there are two $\beta$'s 
+$$ E(Y|x)=\beta_0 +\beta_1 x $$
+
+so the prior would take the form:
 
 $$\beta \sim \mathcal{N}(b_0,B_0^{-1})$$
 
 Notice that `b0 = 0` (the default) this will cause the prior mean to take a value of $(0,0)^{'}$. `B0 = 0` (the default) places an improper uniform on $\beta$. If you make `B0=0.001` say, then $B_0^{-1}=0.001I_2$ where $I_2$ is the $2\times 2$ identity matrix.
 
-The prior on the variance is an inverse gamma:
+The prior on the variance is an inverse gamma, which means the prior for the inverse variance (the precision) is:
 
 $$\sigma^{-2} \sim \mathcal{G}amma(c_0/2, d_0/2)$$
 The default values are `c0=0.001` and `d0=0.001`. You may like to change the priors to see how they effect the posterior.

@@ -89,7 +89,7 @@ The plots are in alphabetical order, and show symmetrical well formed uni-modal 
 
 From the means of the sample distributions we obtain the Bayesian point estimates
 
-$$ CHANGE = `r sm$statistics[1,1]`  `r sm$statistics[2,1]` TEMP $$
+$$ \widehat{CHANGE} = `r sm$statistics[1,1]`  `r sm$statistics[2,1]` TEMP $$
 
 # Finally 
 
