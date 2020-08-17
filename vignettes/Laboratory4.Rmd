@@ -48,7 +48,7 @@ This means that a different model must be used. But which model? Since we have o
       + BIC
       + ...
   2. Penalized $R^2$ also known as adjusted R squared, $R_a^2$
-  3. Mallows's $C_p$ (Choose smaller $C_p$ -- equivalent to AIC for guassian regression)
+  3. [Mallows's $C_p$](https://en.wikipedia.org/wiki/Mallows%27s_Cp) (Choose smaller $C_p$ -- equivalent to AIC for guassian regression)
   4. In cases  where one MLR model is nested in the other we can use an ANOVA test.
   
   

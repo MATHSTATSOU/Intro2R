@@ -127,7 +127,7 @@ g2
 
 ### Criticism
 
-The model works well within most of the domain of `TEMP` but at the extreme end the estimating trend turns up -- this is a property of the quadratic and would not be of much concern for estimation and prediction within most of the range of TEMP. It does give interpretational problems however, at extreme TEMP values -- it gives the appearance that MASS would begin to increase with higher TEMPS.
+The model works well within most of the domain of `TIME` but at the extreme end the estimating trend turns up -- this is a property of the quadratic and would not be of much concern for estimation and prediction within most of the range of TIME. It does give interpretational problems however, at extreme TEMP values -- it gives the appearance that MASS would begin to increase with higher TIME.
 
 ## Using the exponential model
 
