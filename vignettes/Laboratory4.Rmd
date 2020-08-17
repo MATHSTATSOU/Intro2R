@@ -242,6 +242,105 @@ for(xk1 in x[x<=(max(x)-3)]){
 
 ```
 
+# More models
+
+This course will take you further by introducing you to other models -- remember, modeling must be understood well to implement with confidence. However, as a means of motivation we will learn more advanced applications of models from an introductory and practical stand  point.
+
+## GLM (Generalized Linear Models)
+
+If we look at the extended SLR model, that is we add more predictors, the model becomes MLR (Multiple Linear Regression).
+
+We could express it this way:
+
+$$Y = \beta_0 + \beta_1x_1 + \beta_2 x_2 + \ldots \beta_r x_r +\epsilon$$
+Where $\epsilon \sim N(0, \sigma^2)$
+
+Or we could define the **linear predictor**
+
+$$\eta = \beta_0 + \beta_1x_1 + \beta_2 x_2 + \ldots \beta_r x_r $$
+
+$$Y=\eta + \epsilon$$
+
+Or
+
+$$E(Y) = \eta $$
+$$Y\sim N(\eta, \sigma^2)$$
+This last expression contains 3 parts:
+
+>
+  1. Response variables $Y_1, \ldots, Y_n$ which are assumed to share the same distribution from the exponential family
+  2. A set of parameters $\beta$ and explanatory variables $X$, where $\eta = X^{'}\beta$
+  3. A monotone link function $g$ such that
+$$ g(\mu) = \eta$$
+
+where $\mu = E(Y)$.
+
+ The exponential family can be defined as any probability or density function that can be expressed in the following form:
+ 
+ $$f(y|\theta) = exp(a(\theta)b(y) + c(\theta) + d(y))$$
+Where $\theta$ is the parameter, $y$ the data. A theory is built around these assumptions which generalizes the Linear Model.
+
+Maximum likelihood estimates for $\theta$ are made through Newton Raphson optimization.
+
+Notice that this applies to any $Y\sim exponential \; family$ -- this means that $Y$ could be discrete or continuous.
+
+This means that GLM's are very flexible.
+
+We will take an example. Suppose that the dangerous levels of DDT in the flesh of fish is  5ppm.
+
+We can then take the ddt data set and break it into two parts according to whether fish have more or less than 5ppm DDT.
+
+First prepare the data
+
+```{r}
+
+Eat <-with(ddt, cut(DDT, breaks = c(0,5, max(DDT)+1), labels = c("OK", "Dang"), right = FALSE))
+
+summary(Eat)
+class(Eat)
+
+ddt <- within(ddt, Eat <- Eat)
+ddt
+
+
+
+```
+
+Now we will use GLM theory to analyze this, taking the response to be a Bernoulli (Bin(n=1, p)).
+The link is `logit`. Lets review the three parts that must be present in a GLM
+
+>
+  1. $Y_i \sim Bin(n=1, p) \in Expo.\; Family$
+  2. $\eta_{i} = \beta_{0} + \beta_{1} LENGTH + \beta_{2} WEIGHT$
+  3. $log(\frac{p_i}{1-p_i}) = logit(p_i) = \eta_i$
+  
+  Where $\mu_i = p_i = E(Y_i)$
+
+We will use the function `glm()` to perform the `logistic regression`.
+
+
+
+
+```{r}
+yglm <- glm(Eat ~ LENGTH + WEIGHT,family = binomial(link = "logit") ,data = ddt)
+summary(yglm)
+cf<-coef(yglm)
+
+
+```
+
+The estimating equation for the trend is:
+
+$$log(odds) = `r cf[1]` + `r cf[2]`*LENGTH + `r cf[3]`*WEIGHT$$
+where $odds = \frac{p}{1-p}$ -- notice that $p = \frac{exp(odds)}{1+exp(odds)}$
+
+We can calculate these predicted probabilities in R
+
+```{r}
+prob <-predict(yglm, type = "response")
+head(prob,10) 
+```
+
 
 # Summary of Lab 4 main ideas
 

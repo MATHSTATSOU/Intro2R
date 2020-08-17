@@ -157,8 +157,14 @@ mynlsfun <- function(x) cf[1]*exp(cf[2]*x + cf[3]*x^2)
 
 plot(MASS ~ TIME, data = liquid, main = "Non linear Least Squares")
 
+
 curve(mynlsfun, lwd = 3, col = "Blue", add = TRUE)
 text(30,4, expression(hat(E)(MASS)==hat(beta)[0]*exp(hat(beta)[1]*TIME + hat(beta)[2]*TIME)))
+
+
+g <- ggplot(liquid, aes(x = TIME, y = MASS)) + geom_point()
+g <- g + stat_smooth(method = "nls", formula = 'y~b0*exp(b1*x + b2*x^2)', method.args = list(start = list(b0 = 7, b1 = -0.005, b2 = -0.0001)))
+g
 ```
 
 
