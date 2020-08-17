@@ -127,11 +127,11 @@ g2
 
 ### Criticism
 
-The model works well within most of the domain of `TIME` but at the extreme end the estimating trend turns up -- this is a property of the quadratic and would not be of much concern for estimation and prediction within most of the range of TIME. It does give interpretational problems however, at extreme TEMP values -- it gives the appearance that MASS would begin to increase with higher TIME.
+The model works well within most of the domain of `TIME` but at the extreme end the estimating trend turns up  -- this is a property of the quadratic (coefficient of $TIME^2$ is positive) and would not be of much concern for estimation and prediction within most of the range of TIME. It does give interpretational problems however, at extreme TIME values -- it gives the appearance that MASS would begin to increase with higher TIME.
 
 ## Using the exponential model
 
-The model I would like us to look at is the non linear exponential model 
+The model I would like us to look at is the non linear exponential model (you can see that the model is non linear in $\beta_1$ and $\beta_2$)
 
 $$E(MASS|TIME) = \beta_0 e^{\beta_1 TIME + \beta_2 TIME^2}$$
 We will use the `nls` function in the `STATS` base package.
@@ -144,7 +144,6 @@ nls1 <- nls(formula = MASS ~ b0*exp(b1*TIME + b2*TIME^2 ),
             trace = TRUE
             )
 summary(nls1)
-
 ```
 
 ## Plot the exponential model
@@ -159,7 +158,7 @@ mynlsfun <- function(x) cf[1]*exp(cf[2]*x + cf[3]*x^2)
 plot(MASS ~ TIME, data = liquid, main = "Non linear Least Squares")
 
 curve(mynlsfun, lwd = 3, col = "Blue", add = TRUE)
-
+text(30,4, expression(hat(E)(MASS)==hat(beta)[0]*exp(hat(beta)[1]*TIME + hat(beta)[2]*TIME)))
 ```
 
 
