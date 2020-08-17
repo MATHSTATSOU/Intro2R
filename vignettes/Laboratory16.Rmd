@@ -159,7 +159,7 @@ plot(MASS ~ TIME, data = liquid, main = "Non linear Least Squares")
 
 
 curve(mynlsfun, lwd = 3, col = "Blue", add = TRUE)
-text(30,4, expression(hat(E)(MASS)==hat(beta)[0]*exp(hat(beta)[1]*TIME + hat(beta)[2]*TIME)))
+text(30,4, expression(hat(E)(MASS)==hat(beta)[0]*exp(hat(beta)[1]*TIME + hat(beta)[2]*TIME^2)))
 
 
 
