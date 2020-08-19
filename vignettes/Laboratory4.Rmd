@@ -286,7 +286,7 @@ Notice that this applies to any $Y\sim exponential \; family$ -- this means that
 
 This means that GLM's are very flexible.
 
-We will take an example. Suppose that the dangerous levels of DDT in the flesh of fish is  5ppm.
+We will take an example. Suppose that the dangerous levels of DDT in the flesh of fish is  $\ge 5ppm$.
 
 We can then take the ddt data set and break it into two parts according to whether fish have more or less than 5ppm DDT.
 
@@ -294,17 +294,20 @@ First prepare the data
 
 ```{r}
 
-Eat <-with(ddt, cut(DDT, breaks = c(0,5, max(DDT)+1), labels = c("OK", "Dang"), right = FALSE))
+Eat <-with(ddt, cut(DDT, breaks = c(0,5, max(DDT)+1), labels = c("OK", "Dang"), right = FALSE, ordered_result = TRUE))
 
 summary(Eat)
 class(Eat)
 
 ddt <- within(ddt, Eat <- Eat)
-ddt
-
-
+head(ddt)
+levels(Eat)
 
 ```
+
+>
+It is important to see that the new variable created is not simply `nominal` since we know that the underlying variable `DDT` is continuous and hence `OK` would represent values of $DDT< 5ppm$  and `Dang` would represent values of $DDT \ge 5ppm$. Hence `Eat` is actually an ordinal variable.
+
 
 Now we will use GLM theory to analyze this, taking the response to be a Bernoulli (Bin(n=1, p)).
 The link is `logit`. Lets review the three parts that must be present in a GLM
@@ -332,7 +335,7 @@ cf<-coef(yglm)
 The estimating equation for the trend is:
 
 $$log(odds) = `r cf[1]` + `r cf[2]`*LENGTH + `r cf[3]`*WEIGHT$$
-where $odds = \frac{p}{1-p}$ -- notice that $p = \frac{exp(odds)}{1+exp(odds)}$
+where $odds = \frac{p}{1-p}$ -- notice that $p = \frac{exp(\eta)}{1+exp(\eta)}$
 
 We can calculate these predicted probabilities in R
 
