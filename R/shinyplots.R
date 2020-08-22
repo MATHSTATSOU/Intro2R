@@ -35,5 +35,5 @@
 #' @examples
 #' \dontrun{ shinyplots()}
 shinyplots<-function(){
-  shiny::runApp(system.file("shiny", package="shinyexample"),launch.browser = TRUE)
+  shiny::runApp(system.file("shiny", package="Intro2R"),launch.browser = TRUE)
 }
