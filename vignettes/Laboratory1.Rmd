@@ -117,7 +117,7 @@ Basically use `#` for a heading `##` for sub heading etc. Use `$$` for inline la
 
 If you are not systematic and orderly and have become used to a disorganized file system then **NOW** is the time to change.
 
-Make a directory for the course -- you may wish to call it MATH4753. Inside this make a number of subdirectories, Labs, Assignments, Data, Projects.
+Make a directory for the course -- you may wish to call it MATH4753. Inside this make a number of sub-directories, Labs, Assignments, Data, Projects.
 
 Inside the Labs folder create sub-directories called Lab1, Lab2, Lab3 etc 
 
