@@ -192,6 +192,15 @@ summary(ddtg8$SPECIES)
 We are now in a place to answer the original question.
 There are 56 Catfish, 0 Large mouth Bass and 9 small mouth Buffalo fish with more than 8 ppm DDT in their flesh.
 
+
+# More advanced wrangling
+
+A very useful package is `dplyr` which uses [`meta-programming`](https://adv-r.hadley.nz/metaprogramming.html) in its implementation. 
+
+Lets ask and answer some questions using the [`dplyr` package](http://genomicsclass.github.io/book/pages/dplyr_tutorial.html).
+
+# Conclusion
+
 We can of course go further -- now start on the lab and use all available resources.
 
 Good luck and enjoy!!
