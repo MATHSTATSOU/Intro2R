@@ -238,6 +238,42 @@ by_sp <- ddt %>% group_by(SPECIES)
 by_sp %>% summarise(DDT = mean(DDT))
 ```
 
+## Select columns using `select`
+
+Suppose we wish to select only the columns of `ddt` that contain $\tt{LENGTH, WEIGHT}$
+
+```{r}
+df <- ddt %>% select(LENGTH,WEIGHT) 
+head(df)
+```
+## `mutate` columns
+
+We may need to add new columns retaining all the former.
+
+```{r}
+Adf <- ddt %>% mutate(A = LENGTH*WEIGHT)
+head(Adf)
+```
+
+## To arrange a data set
+
+We may need to sort a data-frame based on a variable. For example to arrange the `ddt` data frame by increasing `DDT` we would do the following:
+
+```{r}
+df <- ddt %>% arrange( DDT)
+tail(df)
+```
+
+
+Do something similar -- this time descending order of DDT
+
+```{r}
+df <- ddt %>% arrange(desc(DDT))
+tail(df)
+```
+
+
+
 
 # Conclusion
 
