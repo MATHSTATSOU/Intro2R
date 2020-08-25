@@ -17,7 +17,10 @@ vignette: >
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
+  comment = "#>",
+  message = FALSE,
+  warning = FALSE,
+  fig.align = "center"
 )
 
 dirdl <- system.file("Lab1",package = "Intro2R")
@@ -27,6 +30,7 @@ dirdl <- system.file("Lab1",package = "Intro2R")
 
 ```{r setup}
 library(Intro2R)
+
 ```
 
 
@@ -198,6 +202,42 @@ There are 56 Catfish, 0 Large mouth Bass and 9 small mouth Buffalo fish with mor
 A very useful package is `dplyr` which uses [`meta-programming`](https://adv-r.hadley.nz/metaprogramming.html) in its implementation. 
 
 Lets ask and answer some questions using the [`dplyr` package](http://genomicsclass.github.io/book/pages/dplyr_tutorial.html).
+
+## Filter 
+
+Suppose we want to know about all the CATFISH caught on the `TRM` river. This is a sub-setting problem. Please note that we are using two functions:
+
+  1. `%>%` an infix operator called a *pipe* - this is just a function but uses `meta-programming` in its construction. Here is an example of how you can define `infix` operators.
+```{r}
+`%mypipe%` = function(x,y) x*y - y^x
+2 %mypipe% 3
+```
+  
+  
+  2. `filter` used to perform the sub-setting.
+
+```{r}
+data(ddt)
+library(dplyr)
+library(ggplot2)
+df <- ddt %>% filter(RIVER == "TRM" & SPECIES == "CCATFISH")
+
+g <- ggplot(df, aes(x = LENGTH, y = WEIGHT)) + geom_point() + ggtitle("Catfish caught on TRM")
+g
+```
+
+
+
+
+## `by_group` stats by group
+
+We may need to find the mean DDT in the flesh of each SPECIES of fish
+
+```{r}
+by_sp <- ddt %>% group_by(SPECIES) 
+by_sp %>% summarise(DDT = mean(DDT))
+```
+
 
 # Conclusion
 
