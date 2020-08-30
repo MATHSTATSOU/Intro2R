@@ -164,7 +164,7 @@ The next method uses a library called `ggplot2` and you can download this from c
 
 This package is based on the `grammar of graphics` and is named after the book written by Leland Wilkinson "The Grammar of Graphics". 
 
-The R package was organized and developed by Hadley Wickham and is now very popular and has many improvements added over the years. This attempts to put in place the object oriented grammar as Wilkinson layed it out.
+The R package was organized and developed by Hadley Wickham and is now very popular and has many improvements added over the years. This attempts to put in place the object oriented grammar as Wilkinson laid it out.
 
 To get the most out of it please look at the following websites:
 
@@ -191,6 +191,7 @@ g
 Notice that the first function `ggplot()` takes a data frame as an argument and an aesthetic function `aes()` which defines what constitutes the `x` and `y` variables. This by itself produces a layer with no content. To this is added a geometry -- in this case points. These two layers are combined and called `g` which when printed produces the plot.
 
 We could increase the complexity of the plot by adding more layers.
+
 
 We will add a smoother to the points by using the object created previously and adding a new layer!
 

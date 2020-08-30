@@ -272,7 +272,21 @@ df <- ddt %>% arrange(desc(DDT))
 tail(df)
 ```
 
+# Example taken from MS pg 43 2.28
 
+## Radioative Lichen
+
+```{r}
+data(lichen)
+lichen
+
+```
+
+We will now find the mean, median and mode of radioactivity levels
+
+```{r}
+lichen %>% group_by(LOCATION)%>% summarise(MeanLevel = mean(LOGCES), MedianLevel = median(LOGCES), ModeLevel = mymode(LOGCES) )
+```
 
 
 # Conclusion
