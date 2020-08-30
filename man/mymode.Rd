@@ -4,10 +4,10 @@
 \alias{mymode}
 \title{Function to find the mode}
 \usage{
-mymode(v)
+mymode(x)
 }
 \arguments{
-\item{v}{vector of data}
+\item{x}{vector of data}
 }
 \value{
 the mode of the data (most frequent)
