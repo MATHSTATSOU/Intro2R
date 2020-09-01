@@ -17,7 +17,9 @@ vignette: >
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "ws#>"
+  comment = "ws#>",
+  warning = FALSE,
+  message = FALSE
 )
 
 # directory to Lab
@@ -108,12 +110,29 @@ library(ggplot2)
 library(dplyr)
 mn <- mean(ddt$LENGTH)
 sdd <- sd(ddt$LENGTH)
+ddt <- ddt %>% mutate( z = (LENGTH-mn)/sdd, 
+                       Far = ifelse(abs(z)> 3, "Outlier", 
+                                    ifelse(abs(z)>=2 & abs(z)<=3, 
+                                           "Posiible Out.", "MAIN")))
+g <- ggplot(ddt, aes(x = LENGTH)) + geom_dotplot(aes(fill = Far),binwidth = 1/5*sdd)
+g <- g + geom_density(aes(y = ..count..))
+g <- g + labs(title = "LENGTH data categorized by outlier status using z")
+g
+```
+
+Or we could just *cut* the LENGTH variable as below:
+
+```{r}
+library(ggplot2)
+library(dplyr)
+mn <- mean(ddt$LENGTH)
+sdd <- sd(ddt$LENGTH)
 ddt <- ddt %>% mutate( Lcut = cut(LENGTH, c(min(LENGTH)-1, 
                                             seq(mn-3*sdd, mn+3*sdd, by = sdd), max(LENGTH)),
                                   labels = c("Outlier","Possible Out","Main","Main", "Main","Main", "Possible Out", "Outlier")))
 g <- ggplot(ddt, aes(x = LENGTH)) + geom_dotplot(aes(fill = Lcut),binwidth = 1/5*sdd)
 g <- g + geom_density(aes(y = ..count..))
-g <- g + labs(title = "LENGTH data categorized by outlier status using z")
+g <- g + labs(title = "LENGTH data categorized by outlier status")
 g
 ```
 
