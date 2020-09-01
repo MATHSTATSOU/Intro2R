@@ -95,6 +95,29 @@ length(ddl2)/length(ddt$DDT)*100
 ```
 98.6% of the DDT lies within 2 standard deviations of the mean.
 
+# Dotplot in ggplot
+
+The dotplot is a simple device, we can set bins of a certain size (I will use 1/5 sd(LENGTH)) to break the continuous data into discrete levels.
+
+In addition we will use the `cut()` function to create labels corresponding to regions of LENGTH that are distant from the mean by integral standard deviations.
+
+See the code below:
+
+```{r}
+library(ggplot2)
+library(dplyr)
+mn <- mean(ddt$LENGTH)
+sdd <- sd(ddt$LENGTH)
+ddt <- ddt %>% mutate( Lcut = cut(LENGTH, c(min(LENGTH)-1, 
+                                            seq(mn-3*sdd, mn+3*sdd, by = sdd), max(LENGTH)),
+                                  labels = c("Outlier","Possible Out","Main","Main", "Main","Main", "Possible Out", "Outlier")))
+g <- ggplot(ddt, aes(x = LENGTH)) + geom_dotplot(aes(fill = Lcut),binwidth = 1/5*sdd)
+g <- g + geom_density(aes(y = ..count..))
+g <- g + labs(title = "LENGTH data categorized by outlier status using z")
+g
+```
+
+
 # Instructions
 
 You will need the following files
