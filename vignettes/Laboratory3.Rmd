@@ -38,7 +38,7 @@ This is the first of 2  labs (Labs 3,4) which  introduce the student to Simple L
 
 The second project is an application of SLR theory to a data set. Each student must choose a suitable (this is important) data set that is well explained from a SLR model. For the purposes of this course this will mean that you should choose x and y variables that show a straight line "trend".
 
-Please use the function `pairs(df)` where `df` is a dataframe to determine the suitability of the data for SLR.
+Please use the function `pairs(df)` where `df` is a data-frame to determine the suitability of the data for SLR.
 
 Example:
 
@@ -547,6 +547,13 @@ predict(ylm3, data.frame(LENGTH = 30:39))
 This is a big topic but we can get into the main useage of this idea fairly quickly.
 
 The main idea here is that we would like to dynamically change plots, tables and other R created output based on the various settings of widgets.
+
+There are some shiny apps that are good to go and refine see
+
+```{r,eval=FALSE}
+shinyddt()
+```
+
 
 
 
