@@ -14,7 +14,7 @@ library(dplyr)
 myout <- function(x) ifelse(abs(x) > 3, "OUTLIER",
                             ifelse(abs(x)>=2 & abs(x)<=3, "Poss. Out.", "MAIN"))
 
-ddt<-ddt%>%mutate(zL = scale(LENGTH), zW = scale(WEIGHT), zM = scale(MILE), zD = scale(DDT), zLo = myout(zL), zWo = myout(zW),zMo = myout(zM), zDo = myout(zD) )
+ddt<-ddt%>%mutate(zL = scale(LENGTH), zW = scale(WEIGHT), zM = scale(MILE), zD = scale(DDT), zLo = factor(myout(zL)), zWo = factor(myout(zW)),zMo = factor(myout(zM)), zDo = factor(myout(zD)) )
 
 # Define UI for application that draws a histogram
 ui <- fluidPage(
@@ -37,11 +37,12 @@ ui <- fluidPage(
             varSelectInput("var",
                            "Quantitative Variable:",
                            ddt[,c("MILE","LENGTH", "WEIGHT","DDT")],
-                          selected =  "LENGTH"),
-            varSelectInput("Zout",
-                           "Extreme Quant. values?:",
-                           ddt[,c("zLo","zWo", "zDo")],
-                           selected =  "zLo"),
+                          selected =  "LENGTH"
+                          ),
+            # varSelectInput("Zout",
+            #                "Extreme Quant. values?:",
+            #                ddt[,c("zLo","zWo", "zDo")],
+            #                selected =  "zLo"),
 
         ),
 
@@ -68,9 +69,15 @@ server <- function(input, output) {
     })
     output$dotPlot <- renderPlot({
         # generate bins based on input$bins from ui.R
+ifelse(input$var == "LENGTH", ZZ <- "zLo",
+        ifelse(input$var == "WEIGHT", ZZ <-"zWo",
+                ifelse(input$var == "DDT", ZZ <- "zDo", ZZ <-"zMo")))
+      # sw <- switch(input$var, LENGTH = "zLo", WEIGHT = "zWo", MILE = "zMo", DDT = "zDo")
 
-        g <- ggplot(ddt, aes(x = LENGTH))
-        g <- g + geom_dotplot(aes(fill = zLo))
+      #sw<-noquote(sw)
+
+        g <- ggplot(ddt, aes(x = !!input$var))
+        g <- g + geom_dotplot(aes(color = !!input$condvar, fill = ddt[,ZZ]))
         g <- g + geom_density(aes(y = ..count..))
 
 
