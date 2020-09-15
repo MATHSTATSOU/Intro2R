@@ -90,7 +90,7 @@ Lets go ahead and use `LOESS` to create a smoother
 
 ```{r}
 library(ggplot2)
-gs <- ggplot(ddt, aes(x=LENGTH,y=WEIGHT)) + geom_point(aes(color = SPECIES)) + geom_smooth(method = "loess")
+gs <- ggplot(ddt, aes(x=LENGTH,y=WEIGHT)) + geom_point(aes(color = SPECIES)) + geom_smooth(method = "loess", formula = y~x)
 gs
 ```
 

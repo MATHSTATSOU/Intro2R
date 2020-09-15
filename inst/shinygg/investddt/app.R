@@ -72,12 +72,12 @@ server <- function(input, output) {
 ifelse(input$var == "LENGTH", ZZ <- "zLo",
         ifelse(input$var == "WEIGHT", ZZ <-"zWo",
                 ifelse(input$var == "DDT", ZZ <- "zDo", ZZ <-"zMo")))
-      # sw <- switch(input$var, LENGTH = "zLo", WEIGHT = "zWo", MILE = "zMo", DDT = "zDo")
+      # sw <- switch(input["var"][1], LENGTH = "zLo", WEIGHT = "zWo", MILE = "zMo", DDT = "zDo")
 
       #sw<-noquote(sw)
 
         g <- ggplot(ddt, aes(x = !!input$var))
-        g <- g + geom_dotplot(aes(color = !!input$condvar, fill = ddt[,ZZ]))
+        g <- g + geom_dotplot(aes(color = !!input$condvar,stroke = 5, fill = ddt[,ZZ]))
         g <- g + geom_density(aes(y = ..count..))
 
 
