@@ -6,7 +6,7 @@
 #' @export
 #'
 #' @examples
-#' \dontrun{quad.lm<-lm(y~x,data=df); myplot(x=15)}
-myplot=function(x){
-  quad.lm$coef[1] +quad.lm$coef[2]*x  + quad.lm$coef[3]*x^2
+#' \dontrun{quad.lm<-lm(y~x,data=df); myplot(x=15, q = quad.lm)}
+myplot=function(x,q){
+  q$coef[1] +q$coef[2]*x  + q$coef[3]*x^2
 }

@@ -120,7 +120,7 @@ That is we could write:
 
 $$p(\theta|x)\propto p(\theta)f(x|\theta)$$
 
-In Bayesian theory we often relax the notation so that $p()$ does not necessarily stand for a probability function nor dows $f(x|\theta)$ necessarily stand for a density function. They could stand for either in both cases -- this is where context will inform you of the nature of these functions.
+In Bayesian theory we often relax the notation so that $p()$ does not necessarily stand for a probability function nor does $f(x|\theta)$ necessarily stand for a density function. They could stand for either in both cases -- this is where context will inform you of the nature of these functions.
 
 
 ### Discrete $\theta$
