@@ -66,6 +66,8 @@ The arguments `mle(minuslogl, start = formals(minuslogl), method = "BFGS",fixed 
 
 Notice that we are using the minus of the log likelihood. ($-l(\theta)$)
 
+That is the optimizer is finding the minimum of the $-log(L(\theta))$ this will be the maximum of $log(L(\theta))$.
+
 
 ## Example 1 (1 parameter)
 
