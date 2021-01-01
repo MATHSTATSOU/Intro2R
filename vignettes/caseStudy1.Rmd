@@ -57,7 +57,7 @@ significance level selected in part a.
 
 # Solution
 
-The text book uses a Z approximation assuming that n=41 validates the approximation (large sample).
+The text book uses a Z approximation assuming that $n=41$ validates the approximation (large sample).
 
 You should realize by now that given the assumptions of the t test are upheld we do not need to be concerned about large/small sample issues. The t-test will be valid. The only assumption that might cause a problem when n is small is the assumption of Normality $\bar{Y}_i\stackrel{iid}{\sim}N$. If n is large  $\bar{Y}_i\stackrel{iid}{\sim}N$ even if $Y_i$ is not normal, due to the CLT.
 
