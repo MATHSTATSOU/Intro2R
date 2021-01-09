@@ -10,7 +10,7 @@
 #'
 #' @param ... extra arguments which will be sent to the corresponding ... in this case the plot function
 #'
-#' @return A list of x and y data and a plot of the data
+#' @return A list of x and y data in vector form and a matrix of the same as well as  a plot of the data
 #'
 #'
 #'
@@ -38,8 +38,13 @@
 myfirstfun <- function(x, ...) { # key function "function(), name of function , ... sends extra arguments to plot
   y <- x^2 #object on the right x^2,  name on the left "y"
   graphics::plot(x,y,main = "My first R function", ...) # plot function -- use ?plot to learn more about
+<<<<<<< HEAD
   mat <- matrix(c(x,y), nrow = length(x),byrow = FALSE)
   return(list(x=x,y=y,mat = mat)) # return will stop execution of code and release argument to the command line
+=======
+  mat <-matrix(c(x,y), nrow = length(x),byrow = FALSE)
+  return(list(x=x,y=y, mat = mat)) # return will stop execution of code and release argument to the command line
+>>>>>>> 52ff397c82dc4ec49a4a39906e1f93c4fc03b974
 }
 
 
