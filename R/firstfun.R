@@ -38,7 +38,8 @@
 myfirstfun <- function(x, ...) { # key function "function(), name of function , ... sends extra arguments to plot
   y <- x^2 #object on the right x^2,  name on the left "y"
   graphics::plot(x,y,main = "My first R function", ...) # plot function -- use ?plot to learn more about
-  return(list(x=x,y=y)) # return will stop execution of code and release argument to the command line
+  mat <- matrix(c(x,y), nrow = length(x),byrow = FALSE)
+  return(list(x=x,y=y,mat = mat)) # return will stop execution of code and release argument to the command line
 }
 
 
