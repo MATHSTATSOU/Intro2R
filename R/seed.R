@@ -6,8 +6,8 @@
 #'
 #' @format A data frame with 7 rows and 2 variables:
 #' \describe{
-#'   \item{Change}{Change in free energy, \code{y}}
-#'   \item{Temp}{Temperature}
+#'   \item{CHANGE}{Change in free energy, \code{y}}
+#'   \item{TEMP}{Temperature}
 #' }
 #'
 #' @source \url{https://www.routledge.com/Statistics-for-Engineering-and-the-Sciences-Sixth-Edition/Mendenhall-Sincich/p/book/9781498728850}

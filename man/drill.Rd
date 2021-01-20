@@ -7,8 +7,8 @@
 \format{
 A data frame with 17 rows and 2 variables:
 \describe{
-  \item{x}{Depth at which drilling occurs, feet}
-  \item{y}{Time to drill 5 feet, minutes}
+  \item{DEPTH}{Depth at which drilling occurs, feet}
+  \item{TIME}{Time to drill 5 feet, minutes}
 }
 }
 \source{
@@ -21,6 +21,6 @@ drill
 A data set concerning hydraulic drilling in rock
 }
 \details{
-The time  \code{y} to drill five feet in rock is measured at different depths \code{x}
+The time  \code{TIME} to drill five feet in rock is measured at different depths \code{DEPTH}
 }
 \keyword{datasets}

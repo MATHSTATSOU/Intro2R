@@ -12,7 +12,7 @@ myfirstfun(x, ...)
 \item{...}{extra arguments which will be sent to the corresponding ... in this case the plot function}
 }
 \value{
-A list of x and y data and a plot of the data
+A list of x and y data in vector form and a matrix of the same as well as  a plot of the data
 }
 \description{
 This instructs the student on the basics of function making

@@ -8,12 +8,14 @@ myplot(x, q)
 }
 \arguments{
 \item{x}{The diameter}
+
+\item{q}{a quadratic lm object}
 }
 \value{
 Response ie estimated Height
 }
 \description{
-A function for plotting a quadratic
+A basic function
 }
 \examples{
 \dontrun{quad.lm<-lm(y~x,data=df); myplot(x=15, q = quad.lm)}
