@@ -8,6 +8,7 @@
 #' \describe{
 #'   \item{SweetIndex}{Higher the index the sweeter the juice}
 #'   \item{Pectin}{Water soluble Pectin in ppm}
+#'   \item{Run}{Integer for run number}
 #' }
 #'
 #' @source \url{https://www.routledge.com/Statistics-for-Engineering-and-the-Sciences-Sixth-Edition/Mendenhall-Sincich/p/book/9781498728850}
