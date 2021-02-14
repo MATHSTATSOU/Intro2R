@@ -16,5 +16,5 @@ A named list of all the data
 Read all DAT data from JW
 }
 \examples{
-\dontrun(v <- readMV())
+\dontrun{v <- readMV()}
 }

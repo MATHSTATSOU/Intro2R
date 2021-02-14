@@ -6,7 +6,7 @@
 #' @export
 #'
 #' @examples
-#' \dontrun(v <- readMV())
+#' \dontrun{v <- readMV()}
 readMV <- function(dird = 'D:\\MULTIVARIATE-OU - 2021\\DATA\\'){
 
   reaDAT <- function(file){
