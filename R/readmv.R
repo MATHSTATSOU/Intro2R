@@ -11,7 +11,7 @@ readMV <- function(dird = 'D:\\MULTIVARIATE-OU - 2021\\DATA\\'){
 
   reaDAT <- function(file){
     d <- paste0(dird,file)
-    f<-suppressWarnings(read.table(d, fill = TRUE, header = FALSE,skipNul = TRUE))
+    f<-suppressWarnings(read.table(d, fill = TRUE, header = FALSE,skipNul = FALSE))
 
     f
   }
