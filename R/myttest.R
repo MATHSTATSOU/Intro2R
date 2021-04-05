@@ -9,7 +9,7 @@
 #' @param paired TRUE or FALSE, FALSE by default
 #' @param alpha alpha level between 0,1
 #'
-#' @importFrom utils data
+#' @importFrom utils data read.table
 #'
 #' @return list containing the data, and t test object
 #' @export
