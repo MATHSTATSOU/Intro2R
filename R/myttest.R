@@ -62,4 +62,5 @@ myttest<-function(x,y, paired=FALSE, alpha=0.05){
 #' x<-1:10;mynewf(x)
 mynewf<-function(x){
   plot(x)
+  return(list(x = x))
 }
