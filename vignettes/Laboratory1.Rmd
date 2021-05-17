@@ -289,6 +289,10 @@ lichen %>% group_by(LOCATION)%>% summarise(MeanLevel = mean(LOGCES), MedianLevel
 ```
 
 
+# Data table package `data.table`
+
+This is a very powerful and feature rich package for wrangling bigger data sets. <https://rdatatable.gitlab.io/data.table/>.
+
 # Conclusion
 
 We can of course go further -- now start on the lab and use all available resources.
