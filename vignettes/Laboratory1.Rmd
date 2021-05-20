@@ -293,6 +293,90 @@ lichen %>% group_by(LOCATION)%>% summarise(MeanLevel = mean(LOGCES), MedianLevel
 
 This is a very powerful and feature rich package for wrangling bigger data sets. <https://rdatatable.gitlab.io/data.table/>.
 
+It will be a great idea for all students to become proficient with the basic ideas and implementation of the `data.table` package.
+
+
+As an example we shall wrangle the ddt data set. This package is however very powerful in the sense that you can wrangle large data sets efficiently.
+
+## Mean per group
+
+Find the mean length for each species of fish
+
+```{r}
+library(data.table)
+ddt_dt <- as.data.table(ddt) # make a data table from the ddt data frame
+ddt_dt[, .( MEAN_length = mean(LENGTH)), by = SPECIES]
+
+```
+
+Notice the use of `.()` which is shorthand for `list()`
+
+## Summary stats on more groups
+
+Find the mean of `LENGTH`, `WEIGHT` and `DDT` by `SPECIES`
+
+```{r}
+ddt_dt[, 
+            lapply(.SD, mean, na.rm=TRUE),
+            .SDcols = c("LENGTH", "WEIGHT", "DDT"),
+            by = SPECIES] 
+```
+
+`.SD` stands for sub-setting data and `.SDcols` defines the names of the columns.
+
+
+## Example using a bigger data set
+
+```{r , cache=TRUE}
+input <- if (file.exists("flights14.csv")) {
+   "flights14.csv"
+} else {
+  "https://raw.githubusercontent.com/Rdatatable/data.table/master/vignettes/flights14.csv"
+}
+flights <- fread(input) # fast read into data.table format
+head(flights)
+```
+
+## Using i,j, by
+
+You can easily use the power of the `data.table` by remembering the following 
+
+$$\mathrm{DT[i,j, by]}$$
+
+where `DT` is the data table and `i` the rows, `j` typically will be where you place functions on variables and `by` for what groups you want the functions to act on.
+
+## Subsetting
+
+Select all flights that originate from JFK and have LAX as destination:
+
+```{r}
+flights[origin == "JFK" & dest == "LAX"] %>% head(3)
+
+```
+Find all carriers that originate from JFK and fly to LAX
+
+```{r}
+flights[origin == "JFK" & dest == "LAX",carrier] %>% table() 
+```
+Or we can compute on columns using the `j` slot. Notice the use of `.()` instead of `list()`
+
+```{r}
+flights[origin == "JFK" & dest == "LAX",.(tab = table(carrier))]
+```
+
+
+## `.N` number in group
+
+```{r}
+flights[,.(.N), by = "dest" ]
+```
+
+
+
+For more examples see <https://rdatatable.gitlab.io/data.table/articles/datatable-intro.html>
+
+
+
 # Conclusion
 
 We can of course go further -- now start on the lab and use all available resources.
