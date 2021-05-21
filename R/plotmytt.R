@@ -25,6 +25,7 @@
 #' l<-myttest(x=rnorm(30), y=rnorm(40,0.5));plot(l)
 plot.mytt <- function(x, ...){
   df<-x$df
+  v <- NULL # to stop this from being seen as a global variable
   g<-ggplot(df, aes(x=v,y=data)) + geom_boxplot(aes(fill=v))
   g<-g + ggtitle(paste(
     "P value =",
