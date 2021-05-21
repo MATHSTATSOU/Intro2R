@@ -327,7 +327,7 @@ ddt_dt[,
 
 ## Example using a bigger data set
 
-```{r , cache=TRUE}
+```{r }
 input <- if (file.exists("flights14.csv")) {
    "flights14.csv"
 } else {
