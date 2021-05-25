@@ -36,8 +36,8 @@ myTsim<-function(n1=20,sigma1=3,mean1=5,iter=10000,ymax=0.4,x=2,y=0.3,...){    #
   colbar <- rgb(relf^2,1-relf^3, relf^4,0.3)
 
   hist(w,freq=FALSE, ylim=c(0,ymax), # Histogram with annotation
-       main=substitute(paste("Sample size = ",n[1]," = ",n1,",",", statistic = ",T,","," iterations= ",iter)), col = colbar,
-       xlab=expression(paste(T, "Statistic",sep=" ")), las=1,...)
+       main=substitute(paste("Sample size = ",n[1]," = ",n1,", statistic = ",T,","," iterations= ",iter)), col = colbar,
+       xlab=expression(paste(T, " Statistic",sep=" ")), las=1,...)
   lines(density(w),col="Blue",lwd=3) # add a density plot
   curve(dt(x,n1-1),add=TRUE,col="Red",lty=2,lwd=3) # add a theoretical curve
   title=expression(T==frac((bar(y)-mu),s/sqrt(n[1]))) #mathematical annotation -see ?plotmath
