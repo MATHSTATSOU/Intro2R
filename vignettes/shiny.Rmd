@@ -192,11 +192,17 @@ Why?
 
 -   Secondly we need to validate that a csv file was chosen -- if the file extension is not a csv then give message "Please upload a csv file" and stop the function.
 
+-   We could make do with only the `validate()` function, however the `req()` is good practice.
+
 The following shows how the app will run after a wrong file is selected:
 
 ![](images/chapt7-browse.png)
 
-The above picture shows the message but read.csv is not called on the wrong file due to `validate()`
+The above picture shows the message but read.csv is not called on the wrong file due to `validate().`
+
+If both the req() and validate() are removed this is what you would see when the app is run:
+
+![](images/error.png)
 
 The header is determined by the `input$header` component of the input list.
 
