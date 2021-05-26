@@ -5,10 +5,10 @@
 \title{T simulation}
 \usage{
 myTsim(
-  n1 = 10,
+  n1 = 20,
   sigma1 = 3,
   mean1 = 5,
-  iter = 1000,
+  iter = 10000,
   ymax = 0.4,
   x = 2,
   y = 0.3,

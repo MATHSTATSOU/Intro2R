@@ -15,6 +15,7 @@
 #' @importFrom graphics curve  hist legend lines
 #' @importFrom stats density  dt  rnorm sd
 #'
+#' @importFrom grDevices rgb
 #' @return A plot and list of summary stats
 #' @export
 #'
