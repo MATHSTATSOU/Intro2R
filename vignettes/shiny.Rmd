@@ -250,3 +250,86 @@ shinyApp(ui, server)
 The following is the output when data file is selected:
 
 ![](images/data-read.png)
+
+# New Question
+
+Can we make an app that will read in data and allow the user to make selection of variables to create a suitable plot?
+
+To answer this question we can modify the above code. There seems to be a problem though. How can we make a widget to identify the file to read and then have a widget that selects variables when that can only happen if the file is read. That is the second widget must display variables which depends on the existence of a file in the workspace.
+
+## Modifying the UI
+
+```{r, eval=FALSE}
+
+library(ggplot2)
+
+ui <- fluidPage(
+
+  titlePanel("Plotting data"),
+
+  sidebarLayout(
+
+    sidebarPanel(
+
+      fileInput("file", "Select csv file:", accept = c(".csv")),
+      checkboxInput("header", "The file has a header!", TRUE),
+      br(),
+
+      selectInput("var1", "Select quant./qual. variable for x-axis:", ""),
+      selectInput("var2", "Select quant. variable for y-axis:", ""),
+
+      checkboxInput("scatter", "Scatter plot", TRUE)
+      
+
+         ),
+
+    mainPanel(
+
+      plotOutput("plot1")
+      
+      
+
+      
+    )
+  )
+)
+
+server <- function(input, output, session) {
+  # read input file and update choices for variable selection widget
+  reactive({
+    req(input$file)
+    input_data = read.csv(input$file$datapath, header = input$header)
+
+    updateSelectInput(session, "var1", choices = names(input_data))
+    updateSelectInput(session, "var2", choices = names(input_data))
+  })
+
+  # create first plot given data and selected variables
+  output$plot1 <- renderPlot({
+    req(input$file, input$var1, input$var2)
+    
+    # store selected variables in df
+    df <- input_data[,c(input$var1, input$var2)]
+
+    # create ggplot
+    g <- ggplot(df, aes(x = df[,1], y = df[,2])) +
+      labs(title = paste("Plot of", input$var1, "vs.", input$var2), x = input$var1, y = input$var2) 
+
+    # add regression line and/or marginal plots given user input
+    if (input$scatter) {
+      g <- g + geom_smooth(method = "lm")
+      
+    }
+    else {
+      g <- g + geom_boxplot()
+    }
+    print(g)
+  })
+
+ 
+}
+
+# Run the application
+shinyApp(ui = ui, server = server)
+
+```
