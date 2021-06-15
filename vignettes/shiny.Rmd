@@ -42,7 +42,7 @@ A very good resource can be found here: <https://mastering-shiny.org/index.html>
 
 # Getting started
 
-![](images/shiny.png){width="200"}(<https://mastering-shiny.org/index.html>)
+[![](images/shiny.png){width="200"}](https://mastering-shiny.org/action-transfer.html)
 
 The above book has a lot of detail which we can use and implement. In order to jump start the process of learning we will ask and answer a question.
 
@@ -271,13 +271,13 @@ ui <- fluidPage(
 
     sidebarPanel(
 
-      fileInput("file", "Select csv file:", accept = c(".csv")),
+      fileInput("file", "Select csv file:", accept = ".csv"),
       checkboxInput("header", "The file has a header!", TRUE),
       br(),
-
-      selectInput("var1", "Select quant./qual. variable for x-axis:", ""),
-      selectInput("var2", "Select quant. variable for y-axis:", ""),
-
+      
+      varSelectInput("var1", "Variable 1:", data()),
+      varSelectInput("var2", "Variable 2:", data()),
+      
       checkboxInput("scatter", "Scatter plot", TRUE)
       
 
@@ -296,20 +296,20 @@ ui <- fluidPage(
 
 server <- function(input, output, session) {
   # read input file and update choices for variable selection widget
-  reactive({
+  data <- reactive({
     req(input$file)
-    input_data = read.csv(input$file$datapath, header = input$header)
-
-    updateSelectInput(session, "var1", choices = names(input_data))
-    updateSelectInput(session, "var2", choices = names(input_data))
+   read.csv(input$file$datapath, header = input$header)
+    
   })
+  
+  
 
   # create first plot given data and selected variables
   output$plot1 <- renderPlot({
     req(input$file, input$var1, input$var2)
     
     # store selected variables in df
-    df <- input_data[,c(input$var1, input$var2)]
+    df <- data()[,c(input$var1, input$var2)]
 
     # create ggplot
     g <- ggplot(df, aes(x = df[,1], y = df[,2])) +

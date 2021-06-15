@@ -7,6 +7,7 @@ output:
     math: katex
     df_print: paged
     toc: yes
+    
              
 vignette: >
   %\VignetteIndexEntry{Laboratory1}
@@ -35,6 +36,8 @@ library(Intro2R)
 
 
 # Introduction
+
+
 
 Since this is the first lab I will remind you of some basic formalities which will help you perform all the tasks of this and subsequent laboratories.
 
