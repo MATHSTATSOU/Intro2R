@@ -115,7 +115,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 You can use a lot of very useful tags to format your document. Please see the `cheatsheet` available here: <https://rmarkdown.rstudio.com/lesson-15.html>
 
-Basically use `#` for a heading `##` for sub heading etc. Use `$$` for inline latex and `$$ $$` for main line latex code.
+Basically use `#` for a heading `##` for sub heading etc. Use `$` for inline latex and `$$ $$` for main line latex code.
 
 
 
