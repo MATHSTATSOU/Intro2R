@@ -28,7 +28,8 @@ Imports:
     MCMCpack,
     ggmcmc,
     coda,
-    plotly
+    plotly,
+    rstan
 Suggests: 
     knitr,
     rmarkdown,
