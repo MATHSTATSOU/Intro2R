@@ -4,7 +4,7 @@
 #'
 #' @description A basic Bayesian model estimating a population mean
 #'
-#' @details  Please note the basic structure of the server input output
+#' @details  Please check the STAN site for documentation
 #' @return  An MCMC object
 #'
 #' @section STAN:
