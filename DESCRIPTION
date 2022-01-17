@@ -29,7 +29,8 @@ Imports:
     ggmcmc,
     coda,
     plotly,
-    rstan
+    rstan,
+    shinystan
 Suggests: 
     knitr,
     rmarkdown,
