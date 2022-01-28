@@ -4,7 +4,16 @@
 \alias{basicstan}
 \title{Run a Bayesian model using STAN}
 \usage{
-basicstan()
+basicstan(chains = 3, warmup = 1000, iter = 5000, html = FALSE)
+}
+\arguments{
+\item{chains}{The number of MCMC chains of simulation}
+
+\item{warmup}{How many iterations to throw away}
+
+\item{iter}{The total number of iterations}
+
+\item{html}{TRUE if you want to see a browser interface}
 }
 \value{
 An MCMC object
@@ -13,7 +22,7 @@ An MCMC object
 A basic Bayesian model estimating a population mean
 }
 \details{
-Please note the basic structure of the server input output
+Please check the STAN site for documentation
 }
 \section{STAN}{
 
