@@ -355,6 +355,43 @@ To check which model is better you will need a criterion. Many statisticians use
 
 You may need to try a few linear models until the assumptions are confirmed. Once the best model is determined ("best" determined by satisfying the criteria of a Linear Model and the biggest $R_a^2$) then go ahead and use that model to solve whatever problems you have been confronted with.
 
+# Extra for experts
+
+```{r}
+
+quad.lm = lm(Height~BHDiameter + I(BHDiameter ^ 2), data = spruce.df)
+
+myplot = function(x) {
+  quad.lm$coef[1] + quad.lm$coef[2] * x  + quad.lm$coef[3] * x ^ 2
+}
+
+plot(Height~BHDiameter, main = "Spruce Height Prediction",
+     xlab = "Breast Height Diameter (cm)", ylab = "Height of Tree (m)",
+     pch = 21, bg = "blue", cex = 1.1,
+     xlim = c(0, max(BHDiameter) * 1.0), ylim = c(0, max(Height) * 1.0),
+     data = spruce.df)
+curve(myplot, lwd = 2, col = "steelblue", add = TRUE) # Add curve
+
+# General line segments
+with(spruce.df, segments(BHDiameter, Height, 
+                         BHDiameter, quad.lm$coef[1] + quad.lm$coef[2] * BHDiameter  + quad.lm$coef[3] * BHDiameter ^ 2, col = "Black"))
+
+lgcooks = spruce.df[c(18, 21, 24),] # 3 highest Cook's distances
+
+# Highest Cook's distance line segments in thick red
+with(lgcooks, segments(BHDiameter, Height, 
+                         BHDiameter, quad.lm$coef[1] + quad.lm$coef[2] * BHDiameter  + quad.lm$coef[3] * BHDiameter ^ 2, col = "Red", lwd = 3))
+
+# Number points
+with(spruce.df, text(Height~BHDiameter, labels = row.names(spruce.df), pos = 4, cex = 0.5))
+
+# Arrow to highest Cook's
+with(spruce.df, arrows(BHDiameter[18], Height[24], BHDiameter[24], Height[24], col = "blue", lwd = 2))
+
+# Text about highest Cook's
+with(spruce.df, text(BHDiameter[18], Height[24], labels = c("Highest Cook's\ndistance   "), pos = 2, cex = 1))
+```
+
 
   
 # Lab 4 
