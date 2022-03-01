@@ -34,6 +34,6 @@
 #'
 #' @examples
 #' \dontrun{ shinyddt()}
-shinyddt<-function(){
+shinyddt <- function(){
   shiny::runApp(system.file("shinygg/investddt", package="Intro2R"),launch.browser = TRUE)
 }
