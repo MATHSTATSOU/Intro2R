@@ -30,9 +30,11 @@ Imports:
     coda,
     plotly,
     rstan,
-    shinystan
-Suggests: 
+    shinystan,
+    kableExtra,
     knitr,
+    magrittr
+Suggests: 
     rmarkdown,
     testthat (>= 3.0.0)
 VignetteBuilder: knitr

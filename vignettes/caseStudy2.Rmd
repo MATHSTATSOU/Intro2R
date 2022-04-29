@@ -20,4 +20,20 @@ library(Intro2R)
 
 # Introduction
 
-This 
+Suppose we have a paired data set then we can test the NULL hypothesis 
+
+$$
+H_0 : \mu_1 - \mu_2 = 0
+$$
+
+Using `t.test(x,y,mu = 0, paired = TRUE)`
+
+Note that the order of the data matters, in the above `t.test` `mu=0` means $\mu_x - \mu_y=0$ whereas `t.test(y,x,mu = 0, paired = TRUE)`, `mu=0` means $\mu_y -\mu_x = 0$. 
+
+The NULL hypothesis could be expressed differently depending on the experiment and prior information eg: $\mu_x - \mu_y = 10$ rather than 0. 
+
+# Where does a paired sample come from?
+
+Paired data are very common. Whenever multivariate data is measured pairs will be formed.
+
+
