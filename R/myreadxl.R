@@ -14,6 +14,11 @@
 #' v<-myreadxl()
 #' }
 myreadxl <- function(dird = "D:/MATH4773-5773/DATA/Excel/"){
+  if( !dir.exists(dird) ) {
+    message("Use window to find excel directory")
+   dird <-  choose.dir(caption = "Choose the excel directory!")
+   dird <- paste0(dird, "\\")
+  }
 
   #library(readxl)
 
@@ -36,5 +41,7 @@ myreadxl <- function(dird = "D:/MATH4773-5773/DATA/Excel/"){
   newnames <- stringr::str_sub(files,1,l-4)
   #new names
   names(v) <- newnames
+  v$dird <- dird
+  message(paste0("This is the Excel path:\n", dird))
   invisible(v)
 }
