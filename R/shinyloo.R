@@ -35,5 +35,7 @@
 #' @examples
 #' \dontrun{ shinyloo()}
 shinyloo <- function(){
-  shiny::runApp(system.file("shinyloo", package="Intro2R"),launch.browser = TRUE)
+  shiny::runApp(system.file("shinyloo",
+                            package="Intro2R"),
+                launch.browser = TRUE)
 }

@@ -10,5 +10,5 @@
 #'   \item{DAMAGE}{Thouands of dollars}
 #' }
 #'
-#' @source \url{https://www.routledge.com/Statistics-for-Engineering-and-the-Sciences-Sixth-Edition/Mendenhall-Sincich/p/book/9781498728850}
+#'@source \url{https://www.routledge.com/Statistics-for-Engineering-and-the-Sciences-Sixth-Edition/Mendenhall-Sincich/p/book/9781498728850}
 "fire"

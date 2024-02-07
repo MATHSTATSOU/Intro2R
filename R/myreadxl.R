@@ -5,6 +5,7 @@
 #' @details This will greatly reduce the amount of work needed to perform analyses since the reading of files can be time consuming.
 #'
 #' @param dird this is the directory structure as a string
+#' @importFrom utils choose.dir
 #'
 #' @return a named list of the files read
 #' @export
@@ -14,11 +15,15 @@
 #' v<-myreadxl()
 #' }
 myreadxl <- function(dird = "D:/MATH4773-5773/DATA/Excel/"){
-  if( !dir.exists(dird) ) {
+  if( !dir.exists(dird) & .Platform$OS.type == "windows") {
     message("Use window to find excel directory")
    dird <-  choose.dir(caption = "Choose the excel directory!")
    dird <- paste0(dird, "\\")
-  }
+  } else({
+    if( !dir.exists(dird) & .Platform$OS.type != "windows"){
+      stop("You need the correct directory to the Excel folder (must end in directory separator)")
+    }
+  })
 
   #library(readxl)
 
