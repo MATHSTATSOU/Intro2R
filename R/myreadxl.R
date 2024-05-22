@@ -1,6 +1,6 @@
 #' @title Read all xl files
 #'
-#' @description This function will read a collection of xl files into R's workplace
+#' @description This function will read a collection of xls files into R's workplace
 #'
 #' @details This will greatly reduce the amount of work needed to perform analyses since the reading of files can be time consuming.
 #'
