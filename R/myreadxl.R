@@ -17,7 +17,7 @@
 myreadxl <- function(dird = "D:/MATH4773-5773/DATA/Excel/"){
   if( !dir.exists(dird) & .Platform$OS.type == "windows") {
     message("Use window to find excel directory")
-   dird <-  choose.dir(caption = "Choose the excel directory!")
+   dird <-  utils::choose.dir(caption = "Choose the excel directory!")
    dird <- paste0(dird, "\\")
   } else({
     if( !dir.exists(dird) & .Platform$OS.type != "windows"){
