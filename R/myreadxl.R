@@ -5,7 +5,7 @@
 #' @details This will greatly reduce the amount of work needed to perform analyses since the reading of files can be time consuming.
 #'
 #' @param dird this is the directory structure as a string
-#' @importFrom utils choose.dir
+#'
 #'
 #' @return a named list of the files read
 #' @export
