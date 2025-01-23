@@ -1,7 +1,5 @@
 #' @title Dynamic plots using shiny with ddt
 #'
-#'
-#'
 #' @description Widgets, plotting areas and layouts should be mastered
 #'
 #' @details  Please note the basic structure of the server input output

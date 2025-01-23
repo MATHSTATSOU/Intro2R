@@ -1,10 +1,11 @@
+#' @title Basic Stan
 #' @param chains The number of MCMC chains of simulation
 #'
 #' @param warmup How many iterations to throw away
 #' @param iter The total number of iterations
 #' @param html TRUE if you want to see a browser interface
 #'
-#' @title Run a Bayesian model using STAN
+#'
 #'
 #'
 #'

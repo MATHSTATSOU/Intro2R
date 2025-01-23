@@ -10,7 +10,7 @@
 #' mybart()
 mybart <- function(n = 10, r = 2){
 
-  py <- dbinom(x = 0:n,
+  py <- stats::dbinom(x = 0:n,
                size = n,
                prob = 1/2)
   names(py) = 0:n

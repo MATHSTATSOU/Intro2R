@@ -13,7 +13,7 @@ myreadxl(dird = "D:/MATH4773-5773/DATA/Excel/")
 a named list of the files read
 }
 \description{
-This function will read a collection of xl files into R's workplace
+This function will read a collection of xls files into R's workplace
 }
 \details{
 This will greatly reduce the amount of work needed to perform analyses since the reading of files can be time consuming.

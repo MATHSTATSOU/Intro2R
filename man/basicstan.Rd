@@ -2,7 +2,7 @@
 % Please edit documentation in R/basicstan.R
 \name{basicstan}
 \alias{basicstan}
-\title{Run a Bayesian model using STAN}
+\title{Basic Stan}
 \usage{
 basicstan(chains = 3, warmup = 1000, iter = 5000, html = FALSE)
 }
