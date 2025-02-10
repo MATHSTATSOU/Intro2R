@@ -1,4 +1,4 @@
-#' @title Dynamic plots using shiny
+#' @title Dynamic Plots
 #'
 #'
 #'

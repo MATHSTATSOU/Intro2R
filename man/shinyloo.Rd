@@ -2,7 +2,7 @@
 % Please edit documentation in R/shinyloo.R
 \name{shinyloo}
 \alias{shinyloo}
-\title{Leave One Out stats}
+\title{LOO}
 \usage{
 shinyloo()
 }

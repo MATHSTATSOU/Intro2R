@@ -1,4 +1,4 @@
-#' @title Leave One Out stats
+#' @title LOO
 #'
 #'
 #'

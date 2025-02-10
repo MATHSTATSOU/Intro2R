@@ -1,4 +1,4 @@
-#' @title Function to find the mode
+#' @title The mode
 #'
 #'
 #' @param x vector of data

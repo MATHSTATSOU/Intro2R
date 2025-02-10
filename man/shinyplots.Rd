@@ -2,7 +2,7 @@
 % Please edit documentation in R/shinyplots.R
 \name{shinyplots}
 \alias{shinyplots}
-\title{Dynamic plots using shiny}
+\title{Dynamic Plots}
 \usage{
 shinyplots()
 }

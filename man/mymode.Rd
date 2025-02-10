@@ -2,7 +2,7 @@
 % Please edit documentation in R/mymode.R
 \name{mymode}
 \alias{mymode}
-\title{Function to find the mode}
+\title{The mode}
 \usage{
 mymode(x)
 }
@@ -13,7 +13,7 @@ mymode(x)
 the mode of the data (most frequent)
 }
 \description{
-Function to find the mode
+The mode
 }
 \section{Origin}{
  Taken from a web page originally and then adapted \url{https://www.tutorialspoint.com/r/r_mean_median_mode.htm}
