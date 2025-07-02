@@ -1,4 +1,4 @@
-#' @title The mode
+#' The mode
 #'
 #'
 #' @param x vector of data

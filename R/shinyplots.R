@@ -1,4 +1,4 @@
-#' @title Dynamic Plots
+#' Dynamic Plots
 #'
 #'
 #'

@@ -25,7 +25,7 @@ myreadxl <- function(dird = "D:/MATH4773-5773/DATA/Excel/"){
   #   }
   # })
 
-  library(readxl)
+
 
   files = list.files(dird)
   #files
